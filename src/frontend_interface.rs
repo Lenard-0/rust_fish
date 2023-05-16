@@ -10,11 +10,14 @@ pub fn emoji_piece_is_white(piece: &str) -> Option<bool> {
     }
 }
 
-pub fn parse_board(board: Vec<Vec<String>>) -> Vec<Vec<Option<Piece>>> {
-    return board
-        .iter()
-        .map(|row| row
-            .iter()
-            .map(|tile| Piece::from_emoji(tile)).collect()
-        ).collect()
+pub fn parse_board(board: Vec<Vec<String>>) -> Result<Vec<Vec<Option<Piece>>>, String> {
+    let mut parsed_board = Vec::new();
+    for row in board {
+        let mut new_row = Vec::new();
+        for tile in row {
+            new_row.push(Piece::from_emoji(&tile)?);
+        }
+        parsed_board.push(new_row);
+    }
+    return Ok(parsed_board)
 }
