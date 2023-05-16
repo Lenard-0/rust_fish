@@ -29,13 +29,13 @@ pub fn calculate_possible_moves(
 
     return Ok(match piece_type {
         crate::PieceType::Rook => calculate_rook_moves(board, ir, ic, whites_turn),
-        crate::PieceType::Knight => todo!(),
+        crate::PieceType::Knight => return Err("Not yet completed".to_string()),
         crate::PieceType::Bishop => calculate_bishop_moves(board, ir, ic, whites_turn),
         crate::PieceType::Queen => vec![
             calculate_rook_moves(board, ir, ic, whites_turn),
             calculate_bishop_moves(board, ir, ic, whites_turn)
         ].concat(),
-        crate::PieceType::King => todo!(),
-        crate::PieceType::Pawn => todo!(),
+        crate::PieceType::King => return Err("Not yet completed".to_string()),
+        crate::PieceType::Pawn => return Err("Not yet completed".to_string()),
     })
 }

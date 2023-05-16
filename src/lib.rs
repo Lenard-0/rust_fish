@@ -10,12 +10,12 @@ pub enum Piece {
 }
 
 impl Piece {
-    pub fn from_emoji(piece: &str) -> Option<Self> {
-        return match emoji_piece_is_white(&piece) {
-            Some(true) => Some(Self::White(PieceType::from_emoji(&piece))),
-            Some(false) => Some(Self::Black(PieceType::from_emoji(&piece))),
+    pub fn from_emoji(piece: &str) -> Result<Option<Self>, String> {
+        return Ok(match emoji_piece_is_white(&piece) {
+            Some(true) => Some(Self::White(PieceType::from_emoji(&piece)?)),
+            Some(false) => Some(Self::Black(PieceType::from_emoji(&piece)?)),
             None => None
-        }
+        })
     }
 }
 
@@ -31,16 +31,16 @@ pub enum PieceType {
 
 impl PieceType {
     // can safely return Self as have checked if valid piece in fn previously
-    fn from_emoji(piece: &str) -> Self {
-        return match piece {
+    fn from_emoji(piece: &str) -> Result<Self, String> {
+        return Ok(match piece {
             "♖"|"♜" => Self::Rook,
             "♘"|"♞" => Self::Knight,
             "♗"|"♝" => Self::Bishop,
             "♕"|"♛" => Self::Queen,
             "♔"|"♚" => Self::King,
             "♙"|"♟" => Self::Pawn,
-            _ => unreachable!()
-        }
+            piece => return Err(format!("Emoji piece is not valid! Got: {}", piece))
+        })
     }
 }
 
