@@ -19,5 +19,6 @@ pub fn parse_board(board: Vec<Vec<String>>) -> Result<Vec<Vec<Option<Piece>>>, S
         }
         parsed_board.push(new_row);
     }
-    return Ok(parsed_board)
+    return Err("parsing board worked".to_string())
+    // return Ok(parsed_board)
 }
