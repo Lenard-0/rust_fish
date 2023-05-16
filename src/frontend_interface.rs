@@ -10,7 +10,7 @@ pub fn emoji_piece_is_white(piece: &str) -> Option<bool> {
     }
 }
 
-pub fn parse_board(board: Vec<Vec<&str>>) -> Vec<Vec<Option<Piece>>> {
+pub fn parse_board(board: Vec<Vec<String>>) -> Vec<Vec<Option<Piece>>> {
     return board
         .iter()
         .map(|row| row
