@@ -6,11 +6,15 @@ pub fn calculate_rook_moves(
     ir: usize,
     ic: usize,
     whites_turn: bool,
-) -> Vec<(usize, usize)> {
+) -> Result<Vec<(usize, usize)>, String> {
     let mut possible_moves = Vec::new();
 
     let mut i = 0; // 0 = left, 1 = right, 2 = up, 3 = down
     while i < 4 {
+        if i == 0 {
+
+            return Err("got here".to_string())
+        }
         let mut temp_ir = ir;
         let mut temp_ic = ic;
         loop {
@@ -48,5 +52,5 @@ pub fn calculate_rook_moves(
     }
 
 
-    return possible_moves
+    return Ok(possible_moves)
 }
