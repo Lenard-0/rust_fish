@@ -11,7 +11,14 @@ pub fn calculate_possible_moves(
     ic: usize,
     board: &Vec<Vec<Option<Piece>>>
 ) -> Result<Vec<(usize, usize)>, String> {
-    let piece = match &board[ir][ic] {
+    let tile = match board.get(ir) {
+        Some(row) => match row.get(ic) {
+            Some(tile) => tile,
+            None => return Err(format!("No tile at position: {} {}", ir, ic))
+        },
+        None => return Err(format!("No tile at position: {} {}", ir, ic))
+    };
+    let piece = match tile{
         Some(piece) => piece.clone(),
         None => return Err(format!("No piece at position: {} {}", ir, ic))
     };
