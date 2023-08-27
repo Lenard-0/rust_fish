@@ -12,25 +12,45 @@ pub fn calculate_knight_moves(
     while i < 4 {
         let mut i2 = 0;
         while i2 < 2 {
-            let temp_ic;
-            let temp_ir;
+            let mut temp_ic = ic;
+            let mut temp_ir = ir;
             if i == 0 {
+                if temp_ic as i32 - 2 < 0 {
+                    i += 1;
+                    continue;
+                }
                 temp_ic = ic - 2;
                 if i2 == 0 {
                     temp_ir = ir + 1;
                 } else {
+                    if temp_ir as i32 - 1 < 0 {
+                        i2 += 1;
+                        continue;
+                    }
                     temp_ir = ir - 1;
                 }
             } else if i == 1 {
                 temp_ic = ic + 2;
                 if i2 == 0 {
+                    if temp_ir as i32 - 1 < 0 {
+                        i2 += 1;
+                        continue;
+                    }
                     temp_ir = ir - 1;
                 } else {
                     temp_ir = ir + 1;
                 }
             } else if i == 2 {
+                if temp_ir as i32 - 2 < 0 {
+                    i += 1;
+                    continue;
+                }
                 temp_ir = ir - 2;
                 if i2 == 0 {
+                    if temp_ic as i32 - 1 < 0 {
+                        i2 += 1;
+                        continue;
+                    }
                     temp_ic = ic - 1;
                 } else {
                     temp_ic = ic + 1;
@@ -40,6 +60,10 @@ pub fn calculate_knight_moves(
                 if i2 == 0 {
                     temp_ic = ic + 1;
                 } else {
+                    if temp_ic as i32 - 1 < 0 {
+                        i2 += 1;
+                        continue;
+                    }
                     temp_ic = ic - 1;
                 }
             }

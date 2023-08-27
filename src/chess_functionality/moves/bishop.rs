@@ -15,12 +15,21 @@ pub fn calculate_bishop_moves(
         let mut temp_ic = ic;
         loop {
             if i == 0 {
+                if temp_ir as i32 - 1 < 0 || temp_ic as i32 - 1 < 0 {
+                    break;
+                }
                 temp_ir -= 1; // left + up
                 temp_ic -= 1;
             } else if i == 1 {
+                if temp_ir as i32 - 1 < 0  {
+                    break;
+                }
                 temp_ir -= 1; // right + up
                 temp_ic += 1;
             } else if i == 2 {
+                if temp_ic as i32 - 1 < 0 {
+                    break;
+                }
                 temp_ir += 1; // left + down
                 temp_ic -= 1;
             } else {

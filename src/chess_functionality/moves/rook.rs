@@ -18,10 +18,20 @@ pub fn calculate_rook_moves(
         let mut temp_ic = ic;
         loop {
             if i == 0 {
+                if temp_ir as i32 - 1 < 0 {
+                    break;
+                }
                 temp_ir -= 1; // left
+
             } else if i == 1 {
                 temp_ir += 1; // right
             } else if i == 2 {
+                if i - 1 < 0 {
+                    break;
+                }
+                if temp_ic as i32 - 1 < 0 {
+                    break;
+                }
                 temp_ic -= 1; // up
             } else {
                 temp_ic += 1; // down
