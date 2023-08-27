@@ -4,6 +4,7 @@ use self::{rook::calculate_rook_moves, bishop::calculate_bishop_moves};
 
 pub mod rook;
 pub mod bishop;
+pub mod knight;
 
 pub fn calculate_possible_moves(
     ir: usize,
