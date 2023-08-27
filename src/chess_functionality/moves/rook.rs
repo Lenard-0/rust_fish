@@ -11,8 +11,7 @@ pub fn calculate_rook_moves(
 
     let mut i = 0; // 0 = left, 1 = right, 2 = up, 3 = down
     while i < 4 {
-        if i == 0 {
-
+        if i == 1 {
             return Err("got here".to_string())
         }
         let mut temp_ir = ir;
