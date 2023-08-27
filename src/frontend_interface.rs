@@ -10,15 +10,6 @@ pub fn emoji_piece_is_white(piece: &str) -> Option<bool> {
     }
 }
 
-pub fn calculate_possible_moves_interface(
-    ir: usize,
-    ic: usize,
-    board: Vec<Vec<String>>
-) -> Result<Vec<(usize, usize)>, String> {
-    let parsed_board = parse_board(board)?;
-    return calculate_possible_moves(ir, ic, &parsed_board)
-}
-
 pub fn parse_board(board: Vec<Vec<String>>) -> Result<Vec<Vec<Option<Piece>>>, String> {
     let mut parsed_board = Vec::new();
     for row in board {
