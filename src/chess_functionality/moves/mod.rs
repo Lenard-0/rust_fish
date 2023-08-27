@@ -1,6 +1,6 @@
 use crate::Piece;
 
-use self::{rook::calculate_rook_moves, bishop::calculate_bishop_moves, knight::calculate_knight_moves};
+use self::{rook::calculate_rook_moves, bishop::calculate_bishop_moves, knight::calculate_knight_moves, pawn::calculate_pawn_moves};
 
 pub mod rook;
 pub mod bishop;
@@ -45,6 +45,6 @@ pub fn calculate_possible_moves(
             calculate_bishop_moves(board, ir, ic, whites_turn)
         ].concat(),
         crate::PieceType::King => return Err("Not yet completed".to_string()),
-        crate::PieceType::Pawn => return Err("Not yet completed".to_string()),
+        crate::PieceType::Pawn => calculate_pawn_moves(board, ir, ic, whites_turn),
     })
 }
