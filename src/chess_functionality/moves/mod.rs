@@ -11,7 +11,7 @@ pub mod king;
 #[derive(Debug, Clone)]
 pub struct Move {
     current_pos: (usize, usize),
-    new_pos: (usize, usize),
+    pub new_pos: (usize, usize),
     taken_piece: Option<Piece>,
     check: bool,
     special_rule: Option<SpecialRule>
@@ -69,8 +69,12 @@ pub fn calculate_possible_moves(
     if excluding_moves_that_result_in_check {
         let mut possible_moves = Vec::new();
         for m in possible_moves_before_excluding_check {
+            move_piece(m.current_pos, m.new_pos, board);
             if !king_is_checked(board, whites_turn)? {
+                unmove_piece(m.current_pos, m.new_pos, m.taken_piece.clone(), board);
                 possible_moves.push(m);
+            } else {
+                unmove_piece(m.current_pos, m.new_pos, m.taken_piece.clone(), board)
             }
         }
 
@@ -159,8 +163,9 @@ pub fn move_results_in_check(
     board: &mut Vec<Vec<Option<Piece>>>,
     whites_turn: bool
 ) -> Result<bool, String> {
-    move_piece(current_pos, new_pos, board);
-    let check = king_is_checked(board, whites_turn)?;
-    unmove_piece(current_pos, new_pos, taken_piece, board);
-    return Ok(check)
+    // move_piece(current_pos, new_pos, board);
+    // let check = king_is_checked(board, whites_turn)?;
+    // unmove_piece(current_pos, new_pos, taken_piece, board);
+    // return Ok(check)
+    Ok(false)
 }
