@@ -1,11 +1,13 @@
 use crate::Piece;
 
+use super::{Move, king_is_checked, move_piece, unmove_piece, move_results_in_check};
+
 pub fn calculate_knight_moves(
-    board: &Vec<Vec<Option<Piece>>>,
+    board: &mut Vec<Vec<Option<Piece>>>,
     ir: usize,
     ic: usize,
     whites_turn: bool,
-) -> Vec<(usize, usize)> {
+) -> Result<Vec<Move>, String>  {
     let mut possible_moves = Vec::new();
 
     let mut i = 0; // 0 = left, 1 = right, 2 = up, 3 = down
@@ -74,7 +76,15 @@ pub fn calculate_knight_moves(
                         match tile {
                             Some(Piece::White(_)) if whites_turn => {},
                             Some(Piece::Black(_)) if !whites_turn => {},
-                            _ => possible_moves.push((temp_ir, temp_ic))
+                            _ => {
+                                possible_moves.push(Move {
+                                    current_pos: (ic, ir),
+                                    new_pos: (temp_ir, temp_ic),
+                                    taken_piece: tile.clone(),
+                                    check: move_results_in_check((ir, ic), (temp_ir ,temp_ic), tile.clone(), board, whites_turn)?,
+                                    special_rule: None
+                                })
+                            }
                         }
                     },
                     None => {}
@@ -88,5 +98,5 @@ pub fn calculate_knight_moves(
         i += 1;
     }
 
-    return possible_moves
+    return Ok(possible_moves)
 }

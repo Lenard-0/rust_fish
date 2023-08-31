@@ -1,12 +1,14 @@
 use crate::{Piece, chess_functionality::determine_appropriate_move_behaviour};
 
+use super::{Move, move_results_in_check};
+
 
 pub fn calculate_bishop_moves(
-    board: &Vec<Vec<Option<Piece>>>,
+    board: &mut Vec<Vec<Option<Piece>>>,
     ir: usize,
     ic: usize,
     whites_turn: bool,
-) -> Vec<(usize, usize)> {
+) -> Result<Vec<Move>, String> {
     let mut possible_moves = Vec::new();
 
     let mut i = 0; // 0 = left + up, 1 = right + up, 2 = left + down, 3 = right + down
@@ -51,7 +53,13 @@ pub fn calculate_bishop_moves(
                 whites_turn
             );
             if behaviour.should_add_move {
-                possible_moves.push((temp_ir, temp_ic));
+                possible_moves.push(Move {
+                    current_pos: (ir, ic),
+                    new_pos: (temp_ir, temp_ic),
+                    taken_piece: behaviour.piece_taken.clone(),
+                    check: move_results_in_check((ir, ic), (temp_ir, temp_ic), behaviour.piece_taken, board, whites_turn)?,
+                    special_rule: None
+                });
             }
             if behaviour.should_stop_searching {
                 break;
@@ -62,5 +70,5 @@ pub fn calculate_bishop_moves(
     }
 
 
-    return possible_moves
+    return Ok(possible_moves)
 }

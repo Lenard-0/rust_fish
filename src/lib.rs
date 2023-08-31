@@ -3,7 +3,7 @@ use frontend_interface::emoji_piece_is_white;
 pub mod frontend_interface;
 pub mod chess_functionality;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Piece {
     Black(PieceType),
     White(PieceType),
@@ -19,7 +19,7 @@ impl Piece {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum PieceType {
     Rook,
     Knight,

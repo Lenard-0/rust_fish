@@ -1,15 +1,16 @@
 
-use crate::{Piece, chess_functionality::determine_appropriate_move_behaviour};
+use crate::Piece;
+
+use super::{Move, move_results_in_check};
 
 
 pub fn calculate_king_moves(
-    board: &Vec<Vec<Option<Piece>>>,
+    board: &mut Vec<Vec<Option<Piece>>>,
     ir: usize,
     ic: usize,
     whites_turn: bool,
-) -> Vec<(usize, usize)> {
+) -> Result<Vec<Move>, String> {
     let mut possible_moves = Vec::new();
-
 
     // up
     if ir as i32 - 1 >= 0 {
@@ -19,7 +20,13 @@ pub fn calculate_king_moves(
                 Some(tile) => match tile {
                     Some(Piece::White(_)) if whites_turn => {},
                     Some(Piece::Black(_)) if !whites_turn => {},
-                    _ => possible_moves.push((ir - 1, ic))
+                    _ => possible_moves.push(Move {
+                        current_pos: (ir, ic),
+                        new_pos: (ir - 1, ic),
+                        taken_piece: board[ir - 1][ic].clone(),
+                        check: move_results_in_check((ir, ic), (ir - 1, ic), board[ir - 1][ic].clone(), board, whites_turn)?,
+                        special_rule: None
+                    })
                 },
                 None => {}
             },
@@ -33,7 +40,13 @@ pub fn calculate_king_moves(
                     Some(tile) => match tile {
                         Some(Piece::White(_)) if whites_turn => {},
                         Some(Piece::Black(_)) if !whites_turn => {},
-                        _ => possible_moves.push((ir - 1, ic - 1))
+                        _ => possible_moves.push(Move {
+                            current_pos: (ir, ic),
+                            new_pos: (ir - 1, ic - 1),
+                            taken_piece: board[ir - 1][ic - 1].clone(),
+                            check: move_results_in_check((ir, ic), (ir - 1, ic - 1), board[ir - 1][ic - 1].clone(), board, whites_turn)?,
+                            special_rule: None
+                        })
                     },
                     None => {}
                 },
@@ -47,7 +60,13 @@ pub fn calculate_king_moves(
                 Some(tile) => match tile {
                     Some(Piece::White(_)) if whites_turn => {},
                     Some(Piece::Black(_)) if !whites_turn => {},
-                    _ => possible_moves.push((ir - 1, ic + 1))
+                    _ => possible_moves.push(Move {
+                        current_pos: (ir, ic),
+                        new_pos: (ir - 1, ic + 1),
+                        taken_piece: board[ir - 1][ic + 1].clone(),
+                        check: move_results_in_check((ir, ic), (ir - 1, ic + 1), board[ir - 1][ic + 1].clone(), board, whites_turn)?,
+                        special_rule: None
+                    })
                 },
                 None => {}
             },
@@ -62,7 +81,13 @@ pub fn calculate_king_moves(
                 Some(tile) => match tile {
                     Some(Piece::White(_)) if whites_turn => {},
                     Some(Piece::Black(_)) if !whites_turn => {},
-                    _ => possible_moves.push((ir, ic - 1))
+                    _ => possible_moves.push(Move {
+                        current_pos: (ir, ic),
+                        new_pos: (ir, ic - 1),
+                        taken_piece: board[ir][ic - 1].clone(),
+                        check: move_results_in_check((ir, ic), (ir, ic - 1), board[ir][ic - 1].clone(), board, whites_turn)?,
+                        special_rule: None
+                    })
                 },
                 None => {}
             },
@@ -76,7 +101,13 @@ pub fn calculate_king_moves(
             Some(tile) => match tile {
                 Some(Piece::White(_)) if whites_turn => {},
                 Some(Piece::Black(_)) if !whites_turn => {},
-                _ => possible_moves.push((ir, ic + 1))
+                _ => possible_moves.push(Move {
+                    current_pos: (ir, ic),
+                    new_pos: (ir, ic + 1),
+                    taken_piece: board[ir][ic + 1].clone(),
+                    check: move_results_in_check((ir, ic), (ir, ic + 1), board[ir][ic + 1].clone(), board, whites_turn)?,
+                    special_rule: None
+                })
             },
             None => {}
         },
@@ -90,7 +121,13 @@ pub fn calculate_king_moves(
                 Some(tile) => match tile {
                     Some(Piece::White(_)) if whites_turn => {},
                     Some(Piece::Black(_)) if !whites_turn => {},
-                    _ => possible_moves.push((ir + 1, ic - 1))
+                    _ => possible_moves.push(Move {
+                        current_pos: (ir, ic),
+                        new_pos: (ir + 1, ic - 1),
+                        taken_piece: board[ir + 1][ic - 1].clone(),
+                        check: move_results_in_check((ir, ic), (ir + 1, ic - 1), board[ir + 1][ic - 1].clone(), board, whites_turn)?,
+                        special_rule: None
+                    })
                 },
                 None => {}
             },
@@ -104,7 +141,13 @@ pub fn calculate_king_moves(
             Some(tile) => match tile {
                 Some(Piece::White(_)) if whites_turn => {},
                 Some(Piece::Black(_)) if !whites_turn => {},
-                _ => possible_moves.push((ir + 1, ic))
+                _ => possible_moves.push(Move {
+                    current_pos: (ir, ic),
+                    new_pos: (ir + 1, ic),
+                    taken_piece: board[ir + 1][ic].clone(),
+                    check: move_results_in_check((ir, ic), (ir + 1, ic), board[ir + 1][ic].clone(), board, whites_turn)?,
+                    special_rule: None
+                })
             },
             None => {}
         },
@@ -117,12 +160,18 @@ pub fn calculate_king_moves(
             Some(tile) => match tile {
                 Some(Piece::White(_)) if whites_turn => {},
                 Some(Piece::Black(_)) if !whites_turn => {},
-                _ => possible_moves.push((ir + 1, ic + 1))
+                _ => possible_moves.push(Move {
+                    current_pos: (ir, ic),
+                    new_pos: (ir + 1, ic + 1),
+                    taken_piece: board[ir + 1][ic + 1].clone(),
+                    check: move_results_in_check((ir, ic), (ir + 1, ic + 1), board[ir + 1][ic + 1].clone(), board, whites_turn)?,
+                    special_rule: None
+                })
             },
             None => {}
         },
         None => {}
     };
 
-    return possible_moves
+    return Ok(possible_moves)
 }

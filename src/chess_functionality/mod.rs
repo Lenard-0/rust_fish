@@ -4,7 +4,8 @@ pub mod moves;
 
 pub struct MoveBehaviour {
     should_add_move: bool,
-    should_stop_searching: bool
+    should_stop_searching: bool,
+    piece_taken: Option<Piece>
 }
 
 pub fn determine_appropriate_move_behaviour(
@@ -16,12 +17,14 @@ pub fn determine_appropriate_move_behaviour(
             if whites_turn {
                 MoveBehaviour  {
                     should_add_move: false,
-                    should_stop_searching: true
+                    should_stop_searching: true,
+                    piece_taken: None
                 }
             } else {
                 MoveBehaviour  {
                     should_add_move: true,
-                    should_stop_searching: true
+                    should_stop_searching: true,
+                    piece_taken: tile.clone()
                 }
             }
         },
@@ -29,18 +32,21 @@ pub fn determine_appropriate_move_behaviour(
             if whites_turn {
                 MoveBehaviour  {
                     should_add_move: true,
-                    should_stop_searching: true
+                    should_stop_searching: true,
+                    piece_taken: tile.clone()
                 }
             } else {
                 MoveBehaviour  {
                     should_add_move: false,
-                    should_stop_searching: true
+                    should_stop_searching: true,
+                    piece_taken: None
                 }
             }
         },
         None => MoveBehaviour  {
             should_add_move: true,
-            should_stop_searching: false
+            should_stop_searching: false,
+            piece_taken: None
         }
     }
 }
