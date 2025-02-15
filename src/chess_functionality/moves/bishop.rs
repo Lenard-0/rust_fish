@@ -52,6 +52,7 @@ pub fn calculate_bishop_moves(
                 &tile,
                 whites_turn
             );
+
             if behaviour.should_add_move {
                 possible_moves.push(Move {
                     current_pos: (ir, ic),
