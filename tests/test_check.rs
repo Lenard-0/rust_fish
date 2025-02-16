@@ -10,7 +10,7 @@ mod tests {
         board[6][4] = Some(Piece::Black(PieceType::Queen));
 
         let expected_moves = vec![(7, 6)];
-        let possible_moves = calculate_possible_moves(7, 7, &mut board, true, true).unwrap();
+        let possible_moves = calculate_possible_moves(7, 7, &mut board, true, true, &None).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -25,14 +25,14 @@ mod tests {
         board[7][4] = Some(Piece::Black(PieceType::Queen));
 
         let rook_expected_moves = vec![(7, 5), (7, 4)];
-        let rook_possible_moves = calculate_possible_moves(7, 6, &mut board, true, true).unwrap();
+        let rook_possible_moves = calculate_possible_moves(7, 6, &mut board, true, true, &None).unwrap();
         assert_eq!(rook_possible_moves.len(), rook_expected_moves.len(), "Expected and actual moves differ in count");
         for m in rook_possible_moves {
             assert!(rook_expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
         }
 
         let king_expected_moves = vec![(6, 6), (6, 7)];
-        let king_possible_moves = calculate_possible_moves(7, 7, &mut board, true, true).unwrap();
+        let king_possible_moves = calculate_possible_moves(7, 7, &mut board, true, true, &None).unwrap();
         assert_eq!(king_possible_moves.len(), king_expected_moves.len(), "Expected and actual moves differ in count");
         for m in king_possible_moves {
             assert!(king_expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -46,7 +46,7 @@ mod tests {
         board[7][4] = Some(Piece::Black(PieceType::Queen));
 
         let expected_moves = vec![(6, 6), (6, 7)];
-        let possible_moves = calculate_possible_moves(7, 7, &mut board, true, true).unwrap();
+        let possible_moves = calculate_possible_moves(7, 7, &mut board, true, true, &None).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -61,7 +61,7 @@ mod tests {
         board[7][4] = Some(Piece::Black(PieceType::Queen));
 
         let expected_moves = vec![(7, 6)];
-        let possible_moves = calculate_possible_moves(6, 6, &mut board, true, true).unwrap();
+        let possible_moves = calculate_possible_moves(6, 6, &mut board, true, true, &None).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -75,7 +75,7 @@ mod tests {
         board[0][0] = Some(Piece::White(PieceType::Rook));
         board[7][4] = Some(Piece::Black(PieceType::Queen));
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, true, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, true, true, &None).unwrap();
         assert_eq!(possible_moves.len(), 0, "Expected and actual moves differ in count");
     }
 
@@ -87,11 +87,11 @@ mod tests {
         board[7][4] = Some(Piece::Black(PieceType::Queen));
         board[0][0] = Some(Piece::Black(PieceType::Bishop));
 
-        let rook_possible_moves = calculate_possible_moves(6, 6, &mut board, true, true).unwrap();
+        let rook_possible_moves = calculate_possible_moves(6, 6, &mut board, true, true, &None).unwrap();
         assert_eq!(rook_possible_moves.len(), 0, "Expected and actual moves differ in count");
 
         let king_expected_moves = vec![(6, 7)];
-        let king_possible_moves = calculate_possible_moves(7, 7, &mut board, true, true).unwrap();
+        let king_possible_moves = calculate_possible_moves(7, 7, &mut board, true, true, &None).unwrap();
         assert_eq!(king_possible_moves.len(), king_expected_moves.len(), "Expected and actual moves differ in count");
         for m in king_possible_moves {
             assert!(king_expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -106,11 +106,11 @@ mod tests {
         board[7][4] = Some(Piece::Black(PieceType::Queen));
         board[0][0] = Some(Piece::Black(PieceType::Bishop));
 
-        let rook_possible_moves = calculate_possible_moves(6, 6, &mut board, true, true).unwrap();
+        let rook_possible_moves = calculate_possible_moves(6, 6, &mut board, true, true, &None).unwrap();
         assert_eq!(rook_possible_moves.len(), 0, "Expected and actual moves differ in count");
 
         let king_expected_moves = vec![(6, 7)];
-        let king_possible_moves = calculate_possible_moves(7, 7, &mut board, true, true).unwrap();
+        let king_possible_moves = calculate_possible_moves(7, 7, &mut board, true, true, &None).unwrap();
         assert_eq!(king_possible_moves.len(), king_expected_moves.len(), "Expected and actual moves differ in count");
         for m in king_possible_moves {
             assert!(king_expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);

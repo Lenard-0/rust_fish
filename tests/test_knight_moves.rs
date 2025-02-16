@@ -17,7 +17,7 @@ mod tests {
             vec![Some(Piece::White(PieceType::Rook)), Some(Piece::White(PieceType::Knight)), Some(Piece::White(PieceType::Bishop)), Some(Piece::White(PieceType::Queen)), Some(Piece::White(PieceType::King)), Some(Piece::White(PieceType::Bishop)), Some(Piece::White(PieceType::Knight)), Some(Piece::White(PieceType::Rook))],
         ];
 
-        let possible_moves = calculate_possible_moves(4, 2, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 2, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![
             (2, 1), (2, 3), (3, 4), (5, 4), (5, 0), (3, 0)
@@ -35,7 +35,7 @@ mod tests {
         let mut board = vec![vec![None; 8]; 8];
         board[0][1] = Some(Piece::White(PieceType::Knight));
 
-        let possible_moves = calculate_possible_moves(0, 1, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 1, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![(2, 0), (2, 2), (1, 3)];
 
@@ -51,7 +51,7 @@ mod tests {
         let mut board = vec![vec![None; 8]; 8];
         board[0][0] = Some(Piece::White(PieceType::Knight));
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![(1, 2), (2, 1)];
 
@@ -69,7 +69,7 @@ mod tests {
         board[1][2] = Some(Piece::White(PieceType::Pawn));
         board[1][4] = Some(Piece::White(PieceType::Pawn));
 
-        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![(2, 5), (4, 5), (5, 4), (5, 2), (4, 1), (2, 1)];
 
@@ -87,7 +87,7 @@ mod tests {
         board[1][2] = Some(Piece::Black(PieceType::Pawn));
         board[1][4] = Some(Piece::Black(PieceType::Pawn));
 
-        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, false).unwrap();
+        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, false, &None).unwrap();
 
         let expected_moves = vec![(2, 5), (4, 5), (5, 4), (5, 2), (4, 1), (2, 1)];
 
@@ -105,7 +105,7 @@ mod tests {
         board[1][2] = Some(Piece::Black(PieceType::Pawn));
         board[1][4] = Some(Piece::Black(PieceType::Pawn));
 
-        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![
             (1, 2), (1, 4), (2, 5), (4, 5),
@@ -126,7 +126,7 @@ mod tests {
         board[1][2] = Some(Piece::White(PieceType::Pawn));
         board[1][4] = Some(Piece::White(PieceType::Pawn));
 
-        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, false).unwrap();
+        let possible_moves = calculate_possible_moves(3, 3, &mut board, false, false, &None).unwrap();
 
         let expected_moves = vec![
             (1, 2), (1, 4), (2, 5), (4, 5),
@@ -145,7 +145,7 @@ mod tests {
         let mut board = vec![vec![None; 8]; 8];
         board[0][0] = Some(Piece::White(PieceType::Knight)); // Knight in the top-left corner
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![(1, 2), (2, 1)]; // Only valid L-shaped moves within board limits
 
@@ -157,7 +157,7 @@ mod tests {
 
         // Another test case: Knight on top edge, not in the corner
         board[0][4] = Some(Piece::White(PieceType::Knight));
-        let possible_moves = calculate_possible_moves(0, 4, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![(1, 2), (1, 6), (2, 3), (2, 5)];
 
@@ -173,7 +173,7 @@ mod tests {
         let mut board = vec![vec![None; 8]; 8];
         board[4][4] = Some(Piece::White(PieceType::Knight)); // Knight in the middle
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None).unwrap();
 
         let expected_moves = vec![
             (2, 3), (2, 5), (3, 2), (3, 6),

@@ -5,7 +5,6 @@ pub mod moves;
 pub struct MoveBehaviour {
     should_add_move: bool,
     should_stop_searching: bool,
-    piece_taken: Option<Piece>
 }
 
 impl MoveBehaviour {
@@ -13,15 +12,13 @@ impl MoveBehaviour {
         Self  {
             should_add_move: false,
             should_stop_searching: true,
-            piece_taken: None
         }
     }
 
-    pub fn different_color_piece(tile: &Option<Piece>) -> Self {
+    pub fn different_color_piece() -> Self {
         Self {
             should_add_move: true,
             should_stop_searching: true,
-            piece_taken: tile.clone()
         }
     }
 
@@ -29,7 +26,6 @@ impl MoveBehaviour {
         Self  {
             should_add_move: true,
             should_stop_searching: false,
-            piece_taken: None
         }
     }
 }
@@ -41,8 +37,8 @@ pub fn determine_appropriate_move_behaviour(
     return match *tile {
         Some(Piece::White(_)) if whites_turn => MoveBehaviour::same_color_piece(),
         Some(Piece::Black(_)) if !whites_turn => MoveBehaviour::same_color_piece(),
-        Some(Piece::White(_)) if !whites_turn => MoveBehaviour::different_color_piece(tile),
-        Some(Piece::Black(_)) if whites_turn => MoveBehaviour::different_color_piece(tile),
+        Some(Piece::White(_)) if !whites_turn => MoveBehaviour::different_color_piece(),
+        Some(Piece::Black(_)) if whites_turn => MoveBehaviour::different_color_piece(),
         _ => MoveBehaviour::empty_tile()
     }
 }
