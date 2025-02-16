@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use rust_fish::{chess_functionality::moves::calculate_possible_moves, Piece, PieceType};
+    use rust_fish::{chess_functionality::moves::{calculate_possible_moves, king::CastleState}, Piece, PieceType};
 
     #[test]
     fn queen_moves_freely() {
@@ -17,7 +17,7 @@ mod tests {
             (3, 5), (2, 6), (1, 7), (5, 3), (6, 2), (7, 1)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -40,7 +40,7 @@ mod tests {
             (5, 5), (3, 3), (2, 2), (1, 1), (0, 0), (3, 5), (2, 6), (1, 7), (5, 3), (6, 2), (7, 1)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -63,7 +63,7 @@ mod tests {
             (5, 5), (3, 3), (2, 2), (1, 1), (0, 0), (3, 5), (2, 6), (1, 7), (5, 3), (6, 2), (7, 1)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, false, &None).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, false, &None, &mut CastleState::new()).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -85,7 +85,7 @@ mod tests {
             (3, 5), (2, 6), (1, 7), (5, 3), (6, 2), (7, 1)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -107,7 +107,7 @@ mod tests {
             (3, 5), (2, 6), (1, 7), (5, 3), (6, 2), (7, 1)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, false, &None).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, false, false, &None, &mut CastleState::new()).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -127,7 +127,7 @@ mod tests {
             (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7)
         ];
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, false, true, &None).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
