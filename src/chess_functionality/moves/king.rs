@@ -1,6 +1,7 @@
 use crate::{Piece, PieceType};
 use super::{check::king_is_checked, search_for_moves::search_for_moves, Move};
 
+#[derive(Clone)]
 pub struct CastleState {
     pub white_king_moved: bool,
     pub white_left_rook_moved: bool,
