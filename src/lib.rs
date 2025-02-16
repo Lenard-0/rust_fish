@@ -1,5 +1,6 @@
 
 pub mod chess_functionality;
+pub mod utils;
 
 #[derive(Clone, Debug)]
 pub enum Piece {

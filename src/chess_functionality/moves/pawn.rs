@@ -8,7 +8,7 @@ pub fn calculate_pawn_moves(
     ic: usize,
     whites_turn: bool,
 ) -> Result<Vec<Move>, String> {
-    return Ok((vec![]))
+    return Ok(vec![])
     // let mut possible_moves = Vec::new();
 
     // if whites_turn {

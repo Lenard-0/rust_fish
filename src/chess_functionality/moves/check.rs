@@ -1,4 +1,4 @@
-use crate::Piece;
+use crate::{utils::for_each_tile, Piece};
 use super::{calculate_possible_moves, move_piece, unmove_piece, Move};
 
 pub fn move_results_in_check(
@@ -24,45 +24,36 @@ fn king_is_checked(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Re
     return Ok(false)
 }
 
-fn all_possible_moves(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<Vec<Move>, String> {
+pub fn all_possible_moves(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<Vec<Move>, String> {
     let mut all_possible_moves = Vec::new();
-
-    let mut ir = 0;
-
-    for row in board.clone() {
-        let mut ic = 0;
-        for tile in row {
-            match tile {
-                Some(Piece::White(_)) if whites_turn => {
-                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false, whites_turn)?].concat();
-                },
-                Some(Piece::Black(_)) if !whites_turn => {
-                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false, whites_turn)?].concat();
-                },
-                _ => {}
-            };
-            ic += 1;
+    for_each_tile(&board.clone(), |ir, ic, tile| {
+        match tile {
+            Some(Piece::White(_)) if whites_turn => get_pieces_possible_moves(board, whites_turn, &mut all_possible_moves, ir, ic)?,
+            Some(Piece::Black(_)) if !whites_turn => get_pieces_possible_moves(board, whites_turn, &mut all_possible_moves, ir, ic)?,
+            _ => {}
         }
-        ir += 1;
-    }
+        Ok(())
+    })?;
 
-    return Ok(all_possible_moves)
+    Ok(all_possible_moves)
 }
 
-fn get_kings_position(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<(usize, usize), String> {
-    let mut ir = 0;
-    for row in board.iter() {
-        let mut ic = 0;
-        for tile in row {
-            match tile {
-                Some(Piece::White(crate::PieceType::King)) if whites_turn => return Ok((ir, ic)),
-                Some(Piece::Black(crate::PieceType::King)) if !whites_turn => return Ok((ir, ic)),
-                _ => {}
-            };
-            ic += 1;
-        }
-        ir += 1;
-    }
+fn get_pieces_possible_moves(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool, all_possible_moves: &mut Vec<Move>, ir: usize, ic: usize) -> Result<(), String> {
+    let moves = calculate_possible_moves(ir, ic, board, false, whites_turn)?;
+    all_possible_moves.extend(moves); // Add moves to the list
+    Ok(())
+}
 
-    return Err("Tried to find king's position but king not found on board".to_string())
+
+pub fn get_kings_position(board: &Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<(usize, usize), String> {
+    let mut king_position = None;
+    for_each_tile(board, |ir, ic, tile| {
+        match tile {
+            Some(Piece::White(crate::PieceType::King)) if whites_turn => king_position = Some((ir, ic)),
+            Some(Piece::Black(crate::PieceType::King)) if !whites_turn => king_position = Some((ir, ic)),
+            _ => {}
+        }
+        Ok(())
+    })?;
+    king_position.ok_or_else(|| "Tried to find king's position but king not found on board".to_string())
 }
