@@ -28,7 +28,7 @@ fn move_results_in_check(
     return Ok(check)
 }
 
-fn king_is_checked(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool, previous_move: &Option<Move>) -> Result<bool, String> {
+pub fn king_is_checked(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool, previous_move: &Option<Move>) -> Result<bool, String> {
     let king_position = get_kings_position(board, whites_turn)?;
     let all_possible_enemy_moves = all_possible_moves(board, !whites_turn, previous_move)?;
     for possible_move in all_possible_enemy_moves {

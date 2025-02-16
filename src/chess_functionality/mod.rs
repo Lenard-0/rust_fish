@@ -1,6 +1,7 @@
 use crate::Piece;
 
 pub mod moves;
+pub mod game_over;
 
 pub struct MoveBehaviour {
     should_add_move: bool,
