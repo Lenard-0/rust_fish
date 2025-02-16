@@ -3,6 +3,10 @@ name = "rust_fish"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Lachlan Hislop lachie.hislop@gmail.com"]
+description = "A chess engine and functionality built in Rust. Built for the intention of incorporating it into my Svelte chess project through WASM."
+license = "MIT"
+repository = "https://github.com/Lenard-0/rust_fish"
+documentation = "https://docs.rs/rust_fish"
 
 [dependencies]
