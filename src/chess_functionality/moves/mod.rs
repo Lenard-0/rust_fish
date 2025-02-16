@@ -7,6 +7,7 @@ pub mod bishop;
 pub mod knight;
 pub mod pawn;
 pub mod king;
+pub mod search_for_moves;
 
 #[derive(Debug, Clone)]
 pub struct Move {

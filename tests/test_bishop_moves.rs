@@ -99,6 +99,7 @@ mod tests {
         ];
 
         let possible_moves = calculate_possible_moves(4, 4, &mut board, true, false).unwrap();
+        println!("{:?}", possible_moves);
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
