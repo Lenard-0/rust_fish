@@ -8,7 +8,7 @@ mod tests {
         let mut board = vec![vec![None; 8]; 8];
         board[4][4] = Some(Piece::White(PieceType::Rook)); // Rook in the middle
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, true).unwrap();
 
         let mut expected_moves = vec![];
         for i in 0..8 {
@@ -39,7 +39,7 @@ mod tests {
             }
         }
 
-        let possible_moves = calculate_possible_moves(0, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -57,7 +57,7 @@ mod tests {
             expected_moves.push((0, i)); // Horizontal moves
         }
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -76,7 +76,26 @@ mod tests {
             (5, 4), (3, 4), (2, 4), (1, 4), (0, 4)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, true).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
+        }
+    }
+
+    #[test]
+    fn rook_moves_blocked_by_same_color_alt_color() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[4][4] = Some(Piece::Black(PieceType::Rook));
+        board[4][6] = Some(Piece::Black(PieceType::Pawn)); // Blocked horizontally
+        board[6][4] = Some(Piece::Black(PieceType::Pawn)); // Blocked vertically
+
+        let expected_moves = vec![
+            (4, 5), (4, 3), (4, 2), (4, 1), (4, 0),
+            (5, 4), (3, 4), (2, 4), (1, 4), (0, 4)
+        ];
+
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -95,7 +114,26 @@ mod tests {
             (5, 4), (6, 4), (3, 4), (2, 4), (1, 4), (0, 4)
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, true).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
+        }
+    }
+
+    #[test]
+    fn rook_can_capture_opponent_piece_alt_color() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[4][4] = Some(Piece::Black(PieceType::Rook));
+        board[4][6] = Some(Piece::White(PieceType::Pawn)); // Capturable piece
+        board[6][4] = Some(Piece::White(PieceType::Pawn)); // Capturable piece
+
+        let expected_moves = vec![
+            (4, 5), (4, 6), (4, 3), (4, 2), (4, 1), (4, 0),
+            (5, 4), (6, 4), (3, 4), (2, 4), (1, 4), (0, 4)
+        ];
+
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -113,7 +151,7 @@ mod tests {
             expected_moves.push((0, i)); // Horizontal moves
         }
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -133,7 +171,7 @@ mod tests {
             }
         }
 
-        let possible_moves = calculate_possible_moves(3, 3, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(3, 3, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);

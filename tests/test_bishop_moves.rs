@@ -24,7 +24,7 @@ mod tests {
             }
         }
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -41,7 +41,7 @@ mod tests {
             (1, 3), (2, 2), (3, 1), (4, 0) // Down-left
         ];
 
-        let possible_moves = calculate_possible_moves(0, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -58,7 +58,7 @@ mod tests {
             expected_moves.push((i, i)); // Down-right diagonal moves
         }
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -78,7 +78,27 @@ mod tests {
             (3, 5), (2, 6), (1, 7) // Down-left
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, true).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
+        }
+    }
+
+    #[test]
+    fn bishop_moves_blocked_by_same_color_alt_color() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[4][4] = Some(Piece::Black(PieceType::Bishop));
+        board[6][6] = Some(Piece::Black(PieceType::Pawn)); // Blocked diagonally
+
+        let expected_moves = vec![
+            (5, 5), // Blocked by same color bottom right
+            (3, 3), (2, 2), (1, 1), (0, 0), // Up-left
+            (5, 3), (6, 2), (7, 1), // Up-right
+            (3, 5), (2, 6), (1, 7) // Down-left
+        ];
+
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -98,7 +118,27 @@ mod tests {
             (3, 5), (2, 6), (1, 7) // Down-left
         ];
 
-        let possible_moves = calculate_possible_moves(4, 4, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, true).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
+        }
+    }
+
+    #[test]
+    fn bishop_can_capture_opponent_piece_alt_color() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[4][4] = Some(Piece::Black(PieceType::Bishop));
+        board[6][6] = Some(Piece::White(PieceType::Pawn)); // Capturable piece
+
+        let expected_moves = vec![
+            (5, 5), (6, 6), // Capture included bottom right
+            (3, 3), (2, 2), (1, 1), (0, 0), // Up-left
+            (5, 3), (6, 2), (7, 1), // Up-right
+            (3, 5), (2, 6), (1, 7) // Down-left
+        ];
+
+        let possible_moves = calculate_possible_moves(4, 4, &mut board, true, false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -115,7 +155,7 @@ mod tests {
             expected_moves.push((i, i)); // Down-right diagonal moves
         }
 
-        let possible_moves = calculate_possible_moves(0, 0, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(0, 0, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -143,7 +183,7 @@ mod tests {
             }
         }
 
-        let possible_moves = calculate_possible_moves(3, 3, &mut board, true).unwrap();
+        let possible_moves = calculate_possible_moves(3, 3, &mut board, true, true).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);

@@ -1,4 +1,4 @@
-use crate::Piece;
+use crate::{Piece, PieceType};
 
 use self::{rook::calculate_rook_moves, bishop::calculate_bishop_moves, knight::calculate_knight_moves, pawn::calculate_pawn_moves, king::calculate_king_moves};
 
@@ -28,31 +28,10 @@ pub fn calculate_possible_moves(
     ir: usize,
     ic: usize,
     board: &mut Vec<Vec<Option<Piece>>>,
-    excluding_moves_that_result_in_check: bool
+    excluding_moves_that_result_in_check: bool,
+    whites_turn: bool
 ) -> Result<Vec<Move>, String> {
-    let tile = match board.get(ir) {
-        Some(row) => match row.get(ic) {
-            Some(tile) => tile,
-            None => return Err(format!("No tile at position: {} {}", ir, ic))
-        },
-        None => return Err(format!("No tile at position: {} {}", ir, ic))
-    };
-    let piece = match tile{
-        Some(piece) => piece.clone(),
-        None => return Err(format!("No piece at position: {} {}", ir, ic))
-    };
-
-    let whites_turn: bool;
-    let piece_type = match piece {
-        Piece::Black(piece) => {
-            whites_turn = false;
-            piece
-        },
-        Piece::White(piece) => {
-            whites_turn = true;
-            piece
-        },
-    };
+    let piece_type = PieceType::from_piece(Piece::from_board(board, ir, ic, whites_turn)?);
 
     let possible_moves_before_excluding_check = match piece_type {
         crate::PieceType::Rook => calculate_rook_moves(board, ir, ic, whites_turn)?,
@@ -120,10 +99,10 @@ pub fn all_possible_moves(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool
         for tile in row {
             match tile {
                 Some(Piece::White(_)) if whites_turn => {
-                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false)?].concat();
+                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false, whites_turn)?].concat();
                 },
                 Some(Piece::Black(_)) if !whites_turn => {
-                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false)?].concat();
+                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false, whites_turn)?].concat();
                 },
                 _ => {}
             };
