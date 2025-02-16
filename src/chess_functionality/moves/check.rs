@@ -1,7 +1,21 @@
 use crate::{utils::for_each_tile, Piece};
 use super::{calculate_possible_moves, move_piece, unmove_piece, Move};
 
-pub fn move_results_in_check(
+pub fn remove_moves_resulting_in_check(
+    possible_moves_before_excluding_check: Vec<Move>,
+    board: &mut Vec<Vec<Option<Piece>>>,
+    whites_turn: bool
+) -> Result<Vec<Move>, String> {
+    let mut possible_moves = Vec::new();
+    for m in possible_moves_before_excluding_check {
+        if !move_results_in_check(m.clone(), board, whites_turn)? {
+            possible_moves.push(m);
+        }
+    }
+    return Ok(possible_moves)
+}
+
+fn move_results_in_check(
     move_to_check: Move,
     board: &mut Vec<Vec<Option<Piece>>>,
     whites_turn: bool

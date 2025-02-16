@@ -1,3 +1,5 @@
+use std::f32::INFINITY;
+
 
 pub mod chess_functionality;
 pub mod utils;
@@ -55,6 +57,25 @@ impl PieceType {
         match piece {
             Piece::Black(piece_type) => piece_type,
             Piece::White(piece_type) => piece_type
+        }
+    }
+
+    pub fn directions(&self) -> &[(i32, i32)] {
+        match self {
+            Self::Knight => &[(-2,-1), (-2, 1), (2,-1), (2, 1), (-1, 2), (1, 2), (-1, -2), (1, -2)],
+            Self::Rook => &[(0,1), (0,-1), (1,0), (-1,0)],
+            Self::Bishop => &[(1,1), (-1,-1), (1,-1), (-1,1)],
+            Self::Queen => &[(0,1), (0,-1), (1,0), (-1,0), (1,1), (-1,-1), (1,-1), (-1,1)],
+            Self::King => &[(0,1), (0,-1), (1,0), (-1,0), (1,1), (-1,-1), (1,-1), (-1,1)],
+            Self::Pawn => &[] // ignored as handled differently
+        }
+    }
+
+    pub fn max_steps(&self) -> usize {
+        match self {
+            PieceType::Knight => 1,
+            PieceType::King => 1,
+            _ => INFINITY as usize
         }
     }
 }
