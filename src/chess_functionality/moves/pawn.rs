@@ -1,6 +1,6 @@
 use crate::Piece;
 
-use super::{Move, move_results_in_check};
+use super::Move;
 
 pub fn calculate_pawn_moves(
     board: &mut Vec<Vec<Option<Piece>>>,

@@ -1,7 +1,6 @@
+use check::move_results_in_check;
 use crate::{Piece, PieceType};
-
 use self::{rook::calculate_rook_moves, bishop::calculate_bishop_moves, knight::calculate_knight_moves, pawn::calculate_pawn_moves, king::calculate_king_moves};
-
 use super::MoveBehaviour;
 
 pub mod rook;
@@ -10,13 +9,14 @@ pub mod knight;
 pub mod pawn;
 pub mod king;
 pub mod search_for_moves;
+pub mod check;
 
 #[derive(Debug, Clone)]
 pub struct Move {
     current_pos: (usize, usize),
     pub new_pos: (usize, usize),
     taken_piece: Option<Piece>,
-    check: bool,
+    // check: bool, TODO: I THINK THIS SHOULD ACTUALLY BE REMOVED ENTIRELY. IM UNSURE IF NEEDED AND ACTUALLY BREAKS CODE AND IS REALLY INEFFICIENT
     special_rule: Option<SpecialRule>
 }
 
@@ -27,7 +27,7 @@ impl Move {
         temp_ir: i32,
         temp_ic: i32,
         tile: &Option<Piece>,
-        board: &Vec<Vec<Option<Piece>>>,
+        board: &mut Vec<Vec<Option<Piece>>>,
         whites_turn: bool,
         behaviour: &MoveBehaviour
     ) -> Result<Self, String> {
@@ -35,14 +35,15 @@ impl Move {
                 current_pos: (ir, ic),
                 new_pos: (temp_ir as usize, temp_ic as usize),
                 taken_piece: behaviour.piece_taken.clone(),
-                check: move_results_in_check(
-                    (ir, ic),
-                    (temp_ir as usize, temp_ic as usize),
-                    tile.clone(),
-                    board,
-                    whites_turn,
-                )?,
                 special_rule: None,
+                // TODO: IF NOT NEEDED AS PER ABOVE DELETE THIS GARBAGE
+                // check: move_results_in_check(
+                //     (ir, ic),
+                //     (temp_ir as usize, temp_ic as usize),
+                //     tile.clone(),
+                //     board,
+                //     whites_turn,
+                // )?,
             })
     }
 }
@@ -78,103 +79,35 @@ pub fn calculate_possible_moves(
     if excluding_moves_that_result_in_check {
         let mut possible_moves = Vec::new();
         for m in possible_moves_before_excluding_check {
-            move_piece(m.current_pos, m.new_pos, board);
-            if !king_is_checked(board, whites_turn)? {
-                unmove_piece(m.current_pos, m.new_pos, m.taken_piece.clone(), board);
+            if !move_results_in_check(m.clone(), board, whites_turn)? {
                 possible_moves.push(m);
-            } else {
-                unmove_piece(m.current_pos, m.new_pos, m.taken_piece.clone(), board)
             }
         }
-
         return Ok(possible_moves)
     } else {
         return Ok(possible_moves_before_excluding_check)
     }
 }
 
-pub fn king_is_checked(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<bool, String> {
-    let mut king_position = (0, 0);
-    let mut ir = 0;
-    let mut ic = 0;
-    for row in board.iter() {
-        for tile in row {
-            match tile {
-                Some(Piece::White(crate::PieceType::King)) if whites_turn => king_position = (ir, ic),
-                Some(Piece::Black(crate::PieceType::King)) if !whites_turn => king_position = (ir, ic),
-                _ => {}
-            };
-            ic += 1;
-        }
-        ir += 1;
-    }
-
-    let all_possible_enemy_moves = all_possible_moves(board, !whites_turn)?;
-    for possible_move in all_possible_enemy_moves {
-        if possible_move.new_pos == king_position {
-            return Ok(true)
-        }
-    }
-
-    return Ok(false)
-}
-
-pub fn all_possible_moves(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<Vec<Move>, String> {
-    let mut all_possible_moves = Vec::new();
-
-    let mut ir = 0;
-
-    for row in board.clone() {
-        let mut ic = 0;
-        for tile in row {
-            match tile {
-                Some(Piece::White(_)) if whites_turn => {
-                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false, whites_turn)?].concat();
-                },
-                Some(Piece::Black(_)) if !whites_turn => {
-                    all_possible_moves = vec![all_possible_moves, calculate_possible_moves(ir, ic, board, false, whites_turn)?].concat();
-                },
-                _ => {}
-            };
-            ic += 1;
-        }
-        ir += 1;
-    }
-
-    return Ok(all_possible_moves)
-}
-
+/// Moves piece from current_pos to new_pos
+/// Returns taken piece if any
 pub fn move_piece(
-    current_pos: (usize, usize),
-    new_pos: (usize, usize),
+    moving: &Move,
     board: &mut Vec<Vec<Option<Piece>>>
-) {
-    let piece = board[current_pos.0][current_pos.1].clone();
-    board[new_pos.0][new_pos.1] = piece;
-    board[current_pos.0][current_pos.1] = None;
+) -> Option<Piece> {
+    let taken_piece = board[moving.new_pos.0][moving.new_pos.1].clone();
+    let piece = board[moving.current_pos.0][moving.current_pos.1].clone();
+    board[moving.new_pos.0][moving.new_pos.1] = piece;
+    board[moving.current_pos.0][moving.current_pos.1] = None;
+    return taken_piece
 }
 
 pub fn unmove_piece(
-    current_pos: (usize, usize),
-    new_pos: (usize, usize),
+    moving: &Move,
+    board: &mut Vec<Vec<Option<Piece>>>,
     taken_piece: Option<Piece>,
-    board: &mut Vec<Vec<Option<Piece>>>
 ) {
-    let piece = board[new_pos.0][new_pos.1].clone();
-    board[current_pos.0][current_pos.1] = piece;
-    board[new_pos.0][new_pos.1] = taken_piece;
-}
-
-pub fn move_results_in_check(
-    current_pos: (usize, usize),
-    new_pos: (usize, usize),
-    taken_piece: Option<Piece>,
-    board: &Vec<Vec<Option<Piece>>>,
-    whites_turn: bool
-) -> Result<bool, String> {
-    // move_piece(current_pos, new_pos, board);
-    // let check = king_is_checked(board, whites_turn)?;
-    // unmove_piece(current_pos, new_pos, taken_piece, board);
-    // return Ok(check)
-    Ok(false)
+    let piece = board[moving.new_pos.0][moving.new_pos.1].clone();
+    board[moving.current_pos.0][moving.current_pos.1] = piece;
+    board[moving.new_pos.0][moving.new_pos.1] = taken_piece;
 }

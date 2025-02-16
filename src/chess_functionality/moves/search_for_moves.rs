@@ -27,11 +27,11 @@ pub fn search_for_moves(
                 break; // Stop if out of bounds
             }
 
-            let tile = &board[temp_ir as usize][temp_ic as usize];
-            let behaviour = determine_appropriate_move_behaviour(tile, whites_turn);
+            let tile = board[temp_ir as usize][temp_ic as usize].clone();
+            let behaviour = determine_appropriate_move_behaviour(&tile, whites_turn);
 
             if behaviour.should_add_move {
-                possible_moves.push(Move::from_position(ir, ic, temp_ir, temp_ic, tile, board, whites_turn, &behaviour)?)
+                possible_moves.push(Move::from_position(ir, ic, temp_ir, temp_ic, &tile, board, whites_turn, &behaviour)?)
             }
 
             steps_taken += 1;
