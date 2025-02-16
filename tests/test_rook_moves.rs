@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use rust_fish::{chess_functionality::moves::{calculate_possible_moves, king::CastleState}, Piece, PieceType};
+    use rust_fish_chess_engine::{chess_functionality::moves::{calculate_possible_moves, king::CastleState}, Piece, PieceType};
 
     #[test]
     fn rook_valid_moves_middle_board() {

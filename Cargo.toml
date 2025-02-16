@@ -1,12 +1,12 @@
 [package]
-name = "rust_fish"
+name = "rust_fish_chess_engine"
 version = "0.1.0"
 edition = "2021"
 
 authors = ["Lachlan Hislop lachie.hislop@gmail.com"]
 description = "A chess engine and functionality built in Rust. Built for the intention of incorporating it into my Svelte chess project through WASM."
 license = "MIT"
-repository = "https://github.com/Lenard-0/rust_fish"
-documentation = "https://docs.rs/rust_fish"
+repository = "https://github.com/Lenard-0/rust_fish_chess_engine"
+documentation = "https://docs.rs/rust_fish_chess_engine"
 
 [dependencies]

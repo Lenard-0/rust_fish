@@ -1,5 +1,5 @@
 use crate::{Piece, PieceType};
-use super::{check::king_is_checked, move_piece, search_for_moves::search_for_moves, Move};
+use super::{check::king_is_checked, search_for_moves::search_for_moves, Move};
 
 pub struct CastleState {
     pub white_king_moved: bool,

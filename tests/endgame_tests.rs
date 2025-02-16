@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use rust_fish::{chess_functionality::{game_over::{is_checkmate, is_stalemate}, moves::{calculate_possible_moves, king::CastleState}}, Piece, PieceType};
+    use rust_fish_chess_engine::{chess_functionality::{game_over::{is_checkmate, is_stalemate}, moves::{calculate_possible_moves, king::CastleState}}, Piece, PieceType};
 
     #[test]
     fn checkmate_scenario() {
