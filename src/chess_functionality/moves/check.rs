@@ -15,7 +15,6 @@ pub fn move_results_in_check(
 fn king_is_checked(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<bool, String> {
     let king_position = get_kings_position(board, whites_turn)?;
     let all_possible_enemy_moves = all_possible_moves(board, !whites_turn)?;
-    println!("all_possible_enemy_moves: {:#?}", all_possible_enemy_moves);
     for possible_move in all_possible_enemy_moves {
         if possible_move.new_pos == king_position {
             return Ok(true)
@@ -52,8 +51,8 @@ fn all_possible_moves(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) ->
 
 fn get_kings_position(board: &mut Vec<Vec<Option<Piece>>>, whites_turn: bool) -> Result<(usize, usize), String> {
     let mut ir = 0;
-    let mut ic = 0;
     for row in board.iter() {
+        let mut ic = 0;
         for tile in row {
             match tile {
                 Some(Piece::White(crate::PieceType::King)) if whites_turn => return Ok((ir, ic)),
