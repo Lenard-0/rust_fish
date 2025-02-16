@@ -2,6 +2,8 @@ use crate::{Piece, PieceType};
 
 use self::{rook::calculate_rook_moves, bishop::calculate_bishop_moves, knight::calculate_knight_moves, pawn::calculate_pawn_moves, king::calculate_king_moves};
 
+use super::MoveBehaviour;
+
 pub mod rook;
 pub mod bishop;
 pub mod knight;
@@ -16,6 +18,33 @@ pub struct Move {
     taken_piece: Option<Piece>,
     check: bool,
     special_rule: Option<SpecialRule>
+}
+
+impl Move {
+    pub fn from_position(
+        ir: usize,
+        ic: usize,
+        temp_ir: i32,
+        temp_ic: i32,
+        tile: &Option<Piece>,
+        board: &Vec<Vec<Option<Piece>>>,
+        whites_turn: bool,
+        behaviour: &MoveBehaviour
+    ) -> Result<Self, String> {
+        Ok(Self {
+                current_pos: (ir, ic),
+                new_pos: (temp_ir as usize, temp_ic as usize),
+                taken_piece: behaviour.piece_taken.clone(),
+                check: move_results_in_check(
+                    (ir, ic),
+                    (temp_ir as usize, temp_ic as usize),
+                    tile.clone(),
+                    board,
+                    whites_turn,
+                )?,
+                special_rule: None,
+            })
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -140,7 +169,7 @@ pub fn move_results_in_check(
     current_pos: (usize, usize),
     new_pos: (usize, usize),
     taken_piece: Option<Piece>,
-    board: &mut Vec<Vec<Option<Piece>>>,
+    board: &Vec<Vec<Option<Piece>>>,
     whites_turn: bool
 ) -> Result<bool, String> {
     // move_piece(current_pos, new_pos, board);

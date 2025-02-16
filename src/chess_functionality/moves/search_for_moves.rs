@@ -1,5 +1,5 @@
 use crate::{chess_functionality::determine_appropriate_move_behaviour, Piece};
-use super::{move_results_in_check, Move};
+use super::Move;
 
 /// This function abstractly searches for each standard pieces moves (excluding pawn.)
 /// Each piece searches for moves in different directions, with a different amount of to determine a "direction".
@@ -31,19 +31,7 @@ pub fn search_for_moves(
             let behaviour = determine_appropriate_move_behaviour(tile, whites_turn);
 
             if behaviour.should_add_move {
-                possible_moves.push(Move {
-                    current_pos: (ir, ic),
-                    new_pos: (temp_ir as usize, temp_ic as usize),
-                    taken_piece: behaviour.piece_taken,
-                    check: move_results_in_check(
-                        (ir, ic),
-                        (temp_ir as usize, temp_ic as usize),
-                        tile.clone(),
-                        board,
-                        whites_turn,
-                    )?,
-                    special_rule: None,
-                });
+                possible_moves.push(Move::from_position(ir, ic, temp_ir, temp_ic, tile, board, whites_turn, &behaviour)?)
             }
 
             steps_taken += 1;
