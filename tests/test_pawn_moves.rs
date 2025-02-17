@@ -10,7 +10,7 @@ mod tests {
 
         let expected_moves = vec![(5, 0), (4, 0)];
 
-        let possible_moves = calculate_possible_moves(6, 0, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(6, 0, &mut board, false, true, &None, &mut CastleState::new(), false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -24,7 +24,7 @@ mod tests {
 
         let expected_moves = vec![(4, 0)];
 
-        let possible_moves = calculate_possible_moves(5, 0, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(5, 0, &mut board, false, true, &None, &mut CastleState::new(), false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -38,7 +38,7 @@ mod tests {
         board[4][0] = Some(Piece::White(PieceType::Pawn)); // Block 2-step move
 
         let expected_moves = vec![(5, 0)];
-        let possible_moves = calculate_possible_moves(6, 0, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(6, 0, &mut board, false, true, &None, &mut CastleState::new(), false).unwrap();
         assert!(possible_moves.len() == 1, "Pawn should not be able to move two steps forward due to block");
         assert_eq!(possible_moves[0].new_pos, expected_moves[0]);
     }
@@ -52,7 +52,7 @@ mod tests {
 
         let expected_moves = vec![(5, 2), (5, 0), (5, 1), (4, 1)];
 
-        let possible_moves = calculate_possible_moves(6, 1, &mut board, false, true, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(6, 1, &mut board, false, true, &None, &mut CastleState::new(), false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -79,6 +79,7 @@ mod tests {
                 special_rule: None
             }),
             &mut CastleState::new(),
+            false
         ).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
@@ -93,7 +94,7 @@ mod tests {
 
         let expected_moves = vec![(2, 0), (3, 0)];
 
-        let possible_moves = calculate_possible_moves(1, 0, &mut board, false, false, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(1, 0, &mut board, false, false, &None, &mut CastleState::new(), false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -107,7 +108,7 @@ mod tests {
 
         let expected_moves = vec![(3, 0)];
 
-        let possible_moves = calculate_possible_moves(2, 0, &mut board, false, false, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(2, 0, &mut board, false, false, &None, &mut CastleState::new(), false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -121,7 +122,7 @@ mod tests {
         board[3][0] = Some(Piece::Black(PieceType::Pawn)); // Block 2-step move
 
         let expected_moves = vec![(2, 0)];
-        let possible_moves = calculate_possible_moves(1, 0, &mut board, false, false, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(1, 0, &mut board, false, false, &None, &mut CastleState::new(), false).unwrap();
         assert!(possible_moves.len() == 1, "Pawn should not be able to move two steps forward due to block");
         assert_eq!(possible_moves[0].new_pos, expected_moves[0]);
     }
@@ -135,7 +136,7 @@ mod tests {
 
         let expected_moves = vec![(2, 2), (2, 0), (2, 1), (3, 1)];
 
-        let possible_moves = calculate_possible_moves(1, 1, &mut board, false, false, &None, &mut CastleState::new()).unwrap();
+        let possible_moves = calculate_possible_moves(1, 1, &mut board, false, false, &None, &mut CastleState::new(), false).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
@@ -162,6 +163,7 @@ mod tests {
                 special_rule: None
             }),
             &mut CastleState::new(),
+            false
         ).unwrap();
         assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
         for m in possible_moves {

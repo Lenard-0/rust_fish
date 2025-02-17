@@ -32,9 +32,9 @@ fn all_moves_result_in_check(
     board: &mut Vec<Vec<Option<Piece>>>,
     whites_turn: bool,
     previous_move: &Option<Move>,
-    castle_state: &mut CastleState
+    castle_state: &mut CastleState,
 ) -> Result<bool, String> {
-    let possible_moves = all_possible_moves(board, whites_turn, previous_move, castle_state)?;
+    let possible_moves = all_possible_moves(board, whites_turn, previous_move, castle_state, true)?;
     for m in possible_moves {
         let taken_piece = move_piece(&m, board, castle_state);
         let check = king_is_checked(board, whites_turn, previous_move, castle_state)?;

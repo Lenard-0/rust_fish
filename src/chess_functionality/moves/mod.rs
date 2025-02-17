@@ -45,9 +45,18 @@ pub fn calculate_possible_moves(
     excluding_moves_that_result_in_check: bool,
     whites_turn: bool,
     previous_move: &Option<Move>,
-    castle_state: &mut CastleState
+    castle_state: &mut CastleState,
+    only_including_captures: bool
 ) -> Result<Vec<Move>, String> {
-    let possible_moves_before_excluding_check = get_possible_moves_before_excluding_check(board, ir, ic, whites_turn, previous_move, castle_state)?;
+    let possible_moves_before_excluding_check = get_possible_moves_before_excluding_check(
+        board,
+        ir,
+        ic,
+        whites_turn,
+        previous_move,
+        castle_state,
+        only_including_captures
+    )?;
     if excluding_moves_that_result_in_check {
         return remove_moves_resulting_in_check(possible_moves_before_excluding_check, board, whites_turn, previous_move, castle_state)
     } else {
@@ -61,12 +70,13 @@ fn get_possible_moves_before_excluding_check(
     ic: usize,
     whites_turn: bool,
     previous_move: &Option<Move>,
-    castle_state: &mut CastleState
+    castle_state: &mut CastleState,
+    only_including_captures: bool
 ) -> Result<Vec<Move>, String> {
     let piece_type = PieceType::from_piece(Piece::from_board(board, ir, ic, whites_turn)?);
     match piece_type {
         PieceType::Pawn => calculate_pawn_moves(board, ir, ic, whites_turn, previous_move),
-        PieceType::King => calculate_king_moves(board, ir, ic, whites_turn, previous_move, castle_state),
+        PieceType::King => calculate_king_moves(board, ir, ic, whites_turn, previous_move, castle_state, only_including_captures),
         piece_type => search_for_moves(board, ir, ic, whites_turn, piece_type.directions(), piece_type.max_steps())
     }
 }

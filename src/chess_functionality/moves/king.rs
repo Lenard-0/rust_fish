@@ -31,8 +31,12 @@ pub fn calculate_king_moves(
     whites_turn: bool,
     previous_move: &Option<Move>,
     castle_state: &mut CastleState,
+    only_including_captures: bool
 ) -> Result<Vec<Move>, String> {
     let possible_moves = search_for_moves(board, ir, ic, whites_turn, PieceType::King.directions(), 1)?;
+    if only_including_captures {
+        return Ok(possible_moves)
+    }
     let possible_castling_moves = calculate_castling_moves(board, whites_turn, previous_move, castle_state)?;
     Ok(vec![possible_moves, possible_castling_moves].concat())
 }
