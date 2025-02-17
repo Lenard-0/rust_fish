@@ -36,9 +36,9 @@ fn all_moves_result_in_check(
 ) -> Result<bool, String> {
     let possible_moves = all_possible_moves(board, whites_turn, previous_move, castle_state)?;
     for m in possible_moves {
-        let taken_piece = move_piece(&m, board);
+        let taken_piece = move_piece(&m, board, castle_state);
         let check = king_is_checked(board, whites_turn, previous_move, castle_state)?;
-        unmove_piece(&m, board, taken_piece);
+        unmove_piece(&m, board, taken_piece, castle_state);
         if !check {
             return Ok(false)
         }

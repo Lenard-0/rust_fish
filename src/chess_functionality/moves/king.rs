@@ -1,7 +1,7 @@
 use crate::{Piece, PieceType};
 use super::{check::king_is_checked, move_piece::{move_piece, unmove_piece}, search_for_moves::search_for_moves, Move, SpecialRule};
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct CastleState {
     pub white_king_moved: bool,
     pub white_left_rook_moved: bool,
@@ -109,12 +109,16 @@ fn all_tiles_free_from_check(
     }
 
     for tile in tiles {
-        let taken_piece = move_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board);
+        let taken_piece = move_piece(
+            &Move { current_pos: king_position, new_pos: tile, special_rule: None },
+            board,
+            castle_state
+        );
         if king_is_checked(board, whites_turn, previous_move, castle_state)? {
-            unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece);
+            unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece, castle_state);
             return Ok(false)
         }
-        unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece);
+        unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece, castle_state);
     }
 
     Ok(true)

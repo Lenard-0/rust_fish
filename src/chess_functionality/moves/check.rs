@@ -24,9 +24,9 @@ fn move_results_in_check(
     previous_move: &Option<Move>,
     castle_state: &mut CastleState
 ) -> Result<bool, String> {
-    let taken_piece = move_piece(&move_to_check, board);
+    let taken_piece = move_piece(&move_to_check, board, castle_state);
     let check = king_is_checked(board, whites_turn, previous_move, castle_state)?;
-    unmove_piece(&move_to_check, board, taken_piece);
+    unmove_piece(&move_to_check, board, taken_piece, castle_state);
     return Ok(check)
 }
 

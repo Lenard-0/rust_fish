@@ -10,7 +10,8 @@ mod tests {
         board[7][4] = Some(Piece::White(PieceType::Rook));
 
         let new_move = Move { current_pos: (6, 4), new_pos: (7, 4), special_rule: None };
-        let taken_piece = move_piece(&new_move, &mut board);
+        let mut castle_state = CastleState::new();
+        let taken_piece = move_piece(&new_move, &mut board, &mut castle_state);
         if let Some(Piece::Black(PieceType::Queen)) = board[7][4] {
             assert!(true);
         } else {
@@ -29,7 +30,7 @@ mod tests {
             assert!(false);
         }
 
-        unmove_piece(&new_move, &mut board, taken_piece);
+        unmove_piece(&new_move, &mut board, taken_piece, &mut castle_state);
 
         if let Some(Piece::White(PieceType::Rook)) = board[7][4] {
             assert!(true);
@@ -51,7 +52,8 @@ mod tests {
         board[3][5] = Some(Piece::Black(PieceType::Pawn));
 
         let new_move = Move { current_pos: (3, 4), new_pos: (2, 5), special_rule: Some(SpecialRule::Enpassant) };
-        let taken_piece = move_piece(&new_move, &mut board);
+        let mut castle_state = CastleState::new();
+        let taken_piece = move_piece(&new_move, &mut board, &mut castle_state);
         if let Some(Piece::White(PieceType::Pawn)) = board[2][5] {
             assert!(true);
         } else {
@@ -64,7 +66,7 @@ mod tests {
             assert!(false);
         }
 
-        unmove_piece(&new_move, &mut board, taken_piece);
+        unmove_piece(&new_move, &mut board, taken_piece, &mut castle_state);
 
         if let Some(Piece::White(PieceType::Pawn)) = board[3][4] {
             assert!(true);
@@ -91,7 +93,8 @@ mod tests {
 
         // white king side castle
         let new_move = Move { current_pos: (7, 4), new_pos: (7, 6), special_rule: Some(SpecialRule::Castle) };
-        let taken_piece = move_piece(&new_move, &mut board);
+        let mut castle_state = CastleState::new();
+        let taken_piece = move_piece(&new_move, &mut board, &mut castle_state);
         if let Some(Piece::White(PieceType::King)) = board[7][6] {
             assert!(true);
         } else {
@@ -104,7 +107,7 @@ mod tests {
             assert!(false);
         }
 
-        unmove_piece(&new_move, &mut board, taken_piece);
+        unmove_piece(&new_move, &mut board, taken_piece, &mut castle_state);
 
         if let Some(Piece::White(PieceType::King)) = board[7][4] {
             assert!(true);
@@ -120,7 +123,7 @@ mod tests {
 
         // white queen side castle
         let new_move = Move { current_pos: (7, 4), new_pos: (7, 2), special_rule: Some(SpecialRule::Castle) };
-        let taken_piece = move_piece(&new_move, &mut board);
+        let taken_piece = move_piece(&new_move, &mut board, &mut castle_state);
         if let Some(Piece::White(PieceType::King)) = board[7][2] {
             assert!(true);
         } else {
@@ -133,7 +136,7 @@ mod tests {
             assert!(false);
         }
 
-        unmove_piece(&new_move, &mut board, taken_piece);
+        unmove_piece(&new_move, &mut board, taken_piece, &mut castle_state);
 
         if let Some(Piece::White(PieceType::King)) = board[7][4] {
             assert!(true);
@@ -149,7 +152,7 @@ mod tests {
 
         // black king side castle
         let new_move = Move { current_pos: (0, 4), new_pos: (0, 6), special_rule: Some(SpecialRule::Castle) };
-        let taken_piece = move_piece(&new_move, &mut board);
+        let taken_piece = move_piece(&new_move, &mut board, &mut castle_state);
         if let Some(Piece::Black(PieceType::King)) = board[0][6] {
             assert!(true);
         } else {
@@ -162,7 +165,7 @@ mod tests {
             assert!(false);
         }
 
-        unmove_piece(&new_move, &mut board, taken_piece);
+        unmove_piece(&new_move, &mut board, taken_piece, &mut castle_state);
 
         if let Some(Piece::Black(PieceType::King)) = board[0][4] {
             assert!(true);
@@ -178,7 +181,7 @@ mod tests {
 
         // black queen side castle
         let new_move = Move { current_pos: (0, 4), new_pos: (0, 2), special_rule: Some(SpecialRule::Castle) };
-        let taken_piece = move_piece(&new_move, &mut board);
+        let taken_piece = move_piece(&new_move, &mut board, &mut castle_state);
 
         if let Some(Piece::Black(PieceType::King)) = board[0][2] {
             assert!(true);
@@ -192,7 +195,7 @@ mod tests {
             assert!(false);
         }
 
-        unmove_piece(&new_move, &mut board, taken_piece);
+        unmove_piece(&new_move, &mut board, taken_piece, &mut castle_state);
 
         if let Some(Piece::Black(PieceType::King)) = board[0][4] {
             assert!(true);
@@ -205,5 +208,64 @@ mod tests {
         } else {
             assert!(false);
         }
+    }
+
+    #[test]
+    fn can_moving_rook_and_king_updates_castle_state() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[7][4] = Some(Piece::White(PieceType::King));
+        board[7][7] = Some(Piece::White(PieceType::Rook));
+        board[7][0] = Some(Piece::White(PieceType::Rook));
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+        board[0][0] = Some(Piece::Black(PieceType::Rook));
+
+        // far left white rook moves
+        let mut castle_state = CastleState::new();
+        let new_move = Move { current_pos: (7, 0), new_pos: (7, 1), special_rule: None };
+        move_piece(&new_move, &mut board, &mut castle_state);
+        assert_eq!(castle_state.white_left_rook_moved, true);
+        unmove_piece(&new_move, &mut board, None, &mut castle_state);
+        assert_eq!(castle_state.white_left_rook_moved, false);
+
+        // far right white rook moves
+        let mut castle_state = CastleState::new();
+        let new_move = Move { current_pos: (7, 7), new_pos: (7, 6), special_rule: None };
+        move_piece(&new_move, &mut board, &mut castle_state);
+        assert_eq!(castle_state.white_right_rook_moved, true);
+        unmove_piece(&new_move, &mut board, None, &mut castle_state);
+        assert_eq!(castle_state.white_right_rook_moved, false);
+
+        // white king moves
+        let mut castle_state = CastleState::new();
+        let new_move = Move { current_pos: (7, 4), new_pos: (7, 5), special_rule: None };
+        move_piece(&new_move, &mut board, &mut castle_state);
+        assert_eq!(castle_state.white_king_moved, true);
+        unmove_piece(&new_move, &mut board, None, &mut castle_state);
+        assert_eq!(castle_state.white_king_moved, false);
+
+        // far left black rook moves
+        let mut castle_state = CastleState::new();
+        let new_move = Move { current_pos: (0, 0), new_pos: (0, 1), special_rule: None };
+        move_piece(&new_move, &mut board, &mut castle_state);
+        assert_eq!(castle_state.black_left_rook_moved, true);
+        unmove_piece(&new_move, &mut board, None, &mut castle_state);
+        assert_eq!(castle_state.black_left_rook_moved, false);
+
+        // far right black rook moves
+        let mut castle_state = CastleState::new();
+        let new_move = Move { current_pos: (0, 7), new_pos: (0, 6), special_rule: None };
+        move_piece(&new_move, &mut board, &mut castle_state);
+        assert_eq!(castle_state.black_right_rook_moved, true);
+        unmove_piece(&new_move, &mut board, None, &mut castle_state);
+        assert_eq!(castle_state.black_right_rook_moved, false);
+
+        // black king moves
+        let mut castle_state = CastleState::new();
+        let new_move = Move { current_pos: (0, 4), new_pos: (0, 5), special_rule: None };
+        move_piece(&new_move, &mut board, &mut castle_state);
+        assert_eq!(castle_state.black_king_moved, true);
+        unmove_piece(&new_move, &mut board, None, &mut castle_state);
+        assert_eq!(castle_state.black_king_moved, false);
     }
 }

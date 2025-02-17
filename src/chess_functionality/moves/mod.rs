@@ -16,7 +16,6 @@ pub struct Move {
     pub current_pos: (usize, usize),
     pub new_pos: (usize, usize),
     pub special_rule: Option<SpecialRule>
-    // check: bool, TODO: I THINK THIS SHOULD ACTUALLY BE REMOVED ENTIRELY. IM UNSURE IF NEEDED AND ACTUALLY BREAKS CODE AND IS REALLY INEFFICIENT
 }
 
 impl Move {
@@ -28,14 +27,6 @@ impl Move {
                 current_pos,
                 new_pos,
                 special_rule: None,
-                // TODO: IF NOT NEEDED AS PER ABOVE DELETE THIS GARBAGE
-                // check: move_results_in_check(
-                //     (ir, ic),
-                //     (temp_ir as usize, temp_ic as usize),
-                //     tile.clone(),
-                //     board,
-                //     whites_turn,
-                // )?,
             })
     }
 }

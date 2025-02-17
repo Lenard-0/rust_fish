@@ -127,7 +127,7 @@ mod tests {
         board[5][7] = Some(Piece::Black(PieceType::King));
 
         let new_move = Move { current_pos: (3, 4), new_pos: (2, 5), special_rule: Some(SpecialRule::Enpassant) };
-        move_piece(&new_move, &mut board);
+        move_piece(&new_move, &mut board, &mut CastleState::new());
         assert!(king_is_checked(&mut board, false, &None, &mut CastleState::new()).unwrap());
     }
 }
