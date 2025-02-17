@@ -1,5 +1,5 @@
 use crate::{Piece, PieceType};
-use super::Move;
+use super::{Move, SpecialRule};
 
 pub fn calculate_pawn_moves(
     board: &mut Vec<Vec<Option<Piece>>>,
@@ -44,7 +44,11 @@ pub fn calculate_pawn_moves(
             if *prev_starting_ir == 1 && *prev_current_ir == 3 && *prev_current_ir == ir && (*prev_current_ic == ic + 1 || *prev_current_ic == ic - 1) {
                 match board[*prev_current_ir][*prev_current_ic] {
                     Some(Piece::Black(PieceType::Pawn)) => {
-                        possible_moves.push(Move::from_position((ir, ic), (ir - 1, *prev_current_ic))?)
+                        possible_moves.push(Move {
+                            current_pos: (ir, ic),
+                            new_pos: (ir - 1, *prev_current_ic),
+                            special_rule: Some(SpecialRule::Enpassant)
+                        });
                     },
                     _ => {}
                 };
@@ -87,7 +91,11 @@ pub fn calculate_pawn_moves(
             if *prev_starting_ir == 6 && *prev_current_ir == 4 && *prev_current_ir == ir && (*prev_current_ic == ic + 1 || *prev_current_ic == ic - 1) {
                 match board[*prev_current_ir][*prev_current_ic] {
                     Some(Piece::White(PieceType::Pawn)) => {
-                        possible_moves.push(Move::from_position((ir, ic), (ir + 1, *prev_current_ic))?)
+                        possible_moves.push(Move {
+                            current_pos: (ir, ic),
+                            new_pos: (ir + 1, *prev_current_ic),
+                            special_rule: Some(SpecialRule::Enpassant)
+                        });
                     },
                     _ => {}
                 };

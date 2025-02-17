@@ -1,5 +1,5 @@
 use crate::{Piece, PieceType};
-use super::{check::king_is_checked, move_piece::{move_piece, unmove_piece}, search_for_moves::search_for_moves, Move};
+use super::{check::king_is_checked, move_piece::{move_piece, unmove_piece}, search_for_moves::search_for_moves, Move, SpecialRule};
 
 #[derive(Clone)]
 pub struct CastleState {
@@ -50,7 +50,7 @@ fn calculate_castling_moves(
                 match board[7][7] {
                     Some(Piece::White(PieceType::Rook)) => {
                         if all_tiles_free_from_check(vec![(7, 5), (7, 6)], (7, 4), board, whites_turn, previous_move, castle_state)? {
-                            possible_moves.push(Move { current_pos: (7, 4), new_pos: (7, 6) })
+                            possible_moves.push(Move { current_pos: (7, 4), new_pos: (7, 6), special_rule: Some(SpecialRule::Castle) })
                         }
                     },
                     _ => {}
@@ -61,7 +61,7 @@ fn calculate_castling_moves(
                 match board[7][0] {
                     Some(Piece::White(PieceType::Rook)) => {
                         if all_tiles_free_from_check(vec![(7, 1), (7, 2), (7, 3)], (7, 4), board, whites_turn, previous_move, castle_state)? {
-                            possible_moves.push(Move { current_pos: (7, 4), new_pos: (7, 2) })
+                            possible_moves.push(Move { current_pos: (7, 4), new_pos: (7, 2), special_rule: Some(SpecialRule::Castle) })
                         }
                     },
                     _ => {}
@@ -74,7 +74,7 @@ fn calculate_castling_moves(
                 match board[0][7] {
                     Some(Piece::Black(PieceType::Rook)) => {
                         if all_tiles_free_from_check(vec![(0, 5), (0, 6)], (0, 4), board, whites_turn, previous_move, castle_state)? {
-                            possible_moves.push(Move { current_pos: (0, 4), new_pos: (0, 6) })
+                            possible_moves.push(Move { current_pos: (0, 4), new_pos: (0, 6), special_rule: Some(SpecialRule::Castle) })
                         }
                     },
                     _ => {}
@@ -84,7 +84,7 @@ fn calculate_castling_moves(
                 match board[0][0] {
                     Some(Piece::Black(PieceType::Rook)) => {
                         if all_tiles_free_from_check(vec![(0, 1), (0, 2), (0, 3)], (0, 4), board, whites_turn, previous_move, castle_state)? {
-                            possible_moves.push(Move { current_pos: (0, 4), new_pos: (0, 2) })
+                            possible_moves.push(Move { current_pos: (0, 4), new_pos: (0, 2), special_rule: Some(SpecialRule::Castle) })
                         }
                     },
                     _ => {}
@@ -109,12 +109,12 @@ fn all_tiles_free_from_check(
     }
 
     for tile in tiles {
-        let taken_piece = move_piece(&Move { current_pos: king_position, new_pos: tile }, board);
+        let taken_piece = move_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board);
         if king_is_checked(board, whites_turn, previous_move, castle_state)? {
-            unmove_piece(&Move { current_pos: king_position, new_pos: tile }, board, taken_piece);
+            unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece);
             return Ok(false)
         }
-        unmove_piece(&Move { current_pos: king_position, new_pos: tile }, board, taken_piece);
+        unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece);
     }
 
     Ok(true)

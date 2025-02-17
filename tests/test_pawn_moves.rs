@@ -76,6 +76,7 @@ mod tests {
             &Some(Move {
                 current_pos: (1, 1),
                 new_pos: (3, 1),
+                special_rule: None
             }),
             &mut CastleState::new(),
         ).unwrap();
@@ -158,6 +159,7 @@ mod tests {
             &Some(Move {
                 current_pos: (6, 1),
                 new_pos: (4, 1),
+                special_rule: None
             }),
             &mut CastleState::new(),
         ).unwrap();
