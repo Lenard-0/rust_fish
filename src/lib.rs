@@ -3,6 +3,7 @@ use std::f32::INFINITY;
 
 pub mod chess_functionality;
 pub mod utils;
+pub mod engine;
 
 #[derive(Clone, Debug)]
 pub enum Piece {
