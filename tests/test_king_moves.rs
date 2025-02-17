@@ -248,7 +248,98 @@ mod tests {
         board[0][5] = Some(Piece::Black(PieceType::Queen)); // Queen attacks the square the king will end up on
 
         let possible_moves = calculate_possible_moves(7, 4, &mut board, true, true, &None, &mut CastleState::new()).unwrap();
-        // assert!(possible_moves.iter().none(|m| m.new_pos == (7, 6)), "King should not be able to castle if it ends up in check");
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (7, 6), "King should not be able to castle if it ends up in check");
+        }
     }
+
+    #[test]
+    fn black_king_cant_castle_if_king_has_moved() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+
+        let mut castle_state = CastleState::new();
+        castle_state.black_king_moved = true;
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, false, &None, &mut castle_state).unwrap();
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (0, 6), "King should not be able to castle if it has moved");
+        }
+    }
+
+    #[test]
+    fn black_king_cant_castle_if_rook_has_moved() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+
+        let mut castle_state = CastleState::new();
+        castle_state.black_right_rook_moved = true;
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, false, &None, &mut castle_state).unwrap();
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (0, 6), "King should not be able to castle if the rook has moved");
+        }
+    }
+
+    #[test]
+    fn black_king_cant_castle_if_pieces_between_king_and_rook() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+
+        // Place a piece between the king and the rook
+        board[0][5] = Some(Piece::Black(PieceType::Pawn));
+
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, false, &None, &mut CastleState::new()).unwrap();
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (0, 6), "King should not be able to castle if there are pieces between it and the rook");
+        }
+    }
+
+    #[test]
+    fn black_king_cant_castle_if_king_is_in_check() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+
+        // Place a white piece attacking the king
+        board[7][4] = Some(Piece::White(PieceType::Queen)); // Queen can attack the king
+
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, false, &None, &mut CastleState::new()).unwrap();
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (0, 6), "King should not be able to castle if it is in check");
+        }
+    }
+
+    #[test]
+    fn black_king_cant_castle_if_king_moves_through_check() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+
+        // Place a white piece attacking the square the king would move through
+        board[3][5] = Some(Piece::White(PieceType::Rook));
+
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, false, &None, &mut CastleState::new()).unwrap();
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (0, 6), "King should not be able to castle if it moves through check");
+        }
+    }
+
+    #[test]
+    fn black_king_cant_castle_if_king_ends_up_in_check() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][4] = Some(Piece::Black(PieceType::King));
+        board[0][7] = Some(Piece::Black(PieceType::Rook));
+
+        // Place a white piece attacking the square the king would end up in
+        board[7][5] = Some(Piece::White(PieceType::Queen)); // Queen attacks the square the king will end up on
+
+        let possible_moves = calculate_possible_moves(0, 4, &mut board, true, false, &None, &mut CastleState::new()).unwrap();
+        for m in possible_moves {
+            assert_ne!(m.new_pos, (0, 6), "King should not be able to castle if it ends up in check");
+        }
+    }
+
 
 }
