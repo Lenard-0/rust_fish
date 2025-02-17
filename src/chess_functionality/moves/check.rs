@@ -1,5 +1,5 @@
 use crate::{utils::for_each_tile, Piece};
-use super::{calculate_possible_moves, king::CastleState, move_piece, unmove_piece, Move};
+use super::{calculate_possible_moves, king::CastleState, move_piece::{move_piece, unmove_piece}, Move};
 
 pub fn remove_moves_resulting_in_check(
     possible_moves_before_excluding_check: Vec<Move>,

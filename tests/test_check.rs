@@ -116,4 +116,22 @@ mod tests {
             assert!(king_expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
         }
     }
+
+    // #[test]
+    // fn special_move_enpassant_removes_defender_resulting_in_check() {
+    //     let mut board = vec![vec![None; 8]; 8];
+    //     board[0][0] = Some(Piece::White(PieceType::King));
+    //     board[1][3] = Some(Piece::White(PieceType::Bishop));
+    //     board[3][4] = Some(Piece::White(PieceType::Pawn));
+    //     board[3][5] = Some(Piece::Black(PieceType::Pawn));
+    //     board[5][7] = Some(Piece::Black(PieceType::King));
+
+
+    // }
+
+    // #[test]
+    // fn castle_results_in_check() {
+    //     let mut board = vec![vec![None; 8]; 8];
+
+    // }
 }

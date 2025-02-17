@@ -1,5 +1,5 @@
 use crate::Piece;
-use super::moves::{check::{all_possible_moves, king_is_checked}, king::CastleState, move_piece, unmove_piece, Move};
+use super::moves::{check::{all_possible_moves, king_is_checked}, king::CastleState, move_piece::{move_piece, unmove_piece}, Move};
 
 
 pub fn is_checkmate(

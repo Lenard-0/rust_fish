@@ -1,5 +1,5 @@
 use crate::{Piece, PieceType};
-use super::{check::king_is_checked, move_piece, search_for_moves::search_for_moves, unmove_piece, Move};
+use super::{check::king_is_checked, move_piece::{move_piece, unmove_piece}, search_for_moves::search_for_moves, Move};
 
 #[derive(Clone)]
 pub struct CastleState {

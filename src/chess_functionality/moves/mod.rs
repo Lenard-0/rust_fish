@@ -9,6 +9,7 @@ pub mod pawn;
 pub mod king;
 pub mod search_for_moves;
 pub mod check;
+pub mod move_piece;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Move {
@@ -77,27 +78,4 @@ fn get_possible_moves_before_excluding_check(
         PieceType::King => calculate_king_moves(board, ir, ic, whites_turn, previous_move, castle_state),
         piece_type => search_for_moves(board, ir, ic, whites_turn, piece_type.directions(), piece_type.max_steps())
     }
-}
-
-/// Moves piece from current_pos to new_pos
-/// Returns taken piece if any
-pub fn move_piece(
-    moving: &Move,
-    board: &mut Vec<Vec<Option<Piece>>>
-) -> Option<Piece> {
-    let taken_piece = board[moving.new_pos.0][moving.new_pos.1].clone();
-    let piece = board[moving.current_pos.0][moving.current_pos.1].clone();
-    board[moving.new_pos.0][moving.new_pos.1] = piece;
-    board[moving.current_pos.0][moving.current_pos.1] = None;
-    return taken_piece
-}
-
-pub fn unmove_piece(
-    moving: &Move,
-    board: &mut Vec<Vec<Option<Piece>>>,
-    taken_piece: Option<Piece>,
-) {
-    let piece = board[moving.new_pos.0][moving.new_pos.1].clone();
-    board[moving.current_pos.0][moving.current_pos.1] = piece;
-    board[moving.new_pos.0][moving.new_pos.1] = taken_piece;
 }
