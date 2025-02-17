@@ -5,7 +5,7 @@ pub mod chess_functionality;
 pub mod utils;
 pub mod engine;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Piece {
     Black(PieceType),
     White(PieceType),
@@ -43,7 +43,7 @@ impl Piece {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum PieceType {
     Rook,
     Knight,
