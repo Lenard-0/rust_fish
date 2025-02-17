@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use rust_fish_chess_engine::{chess_functionality::moves::{calculate_possible_moves, king::CastleState}, Piece, PieceType};
+    use rust_fish_chess_engine::{chess_functionality::moves::{calculate_possible_moves, check::king_is_checked, king::CastleState, move_piece::move_piece, Move, SpecialRule}, Piece, PieceType};
 
     #[test]
     fn cannot_move_into_check() {
@@ -117,21 +117,17 @@ mod tests {
         }
     }
 
-    // #[test]
-    // fn special_move_enpassant_removes_defender_resulting_in_check() {
-    //     let mut board = vec![vec![None; 8]; 8];
-    //     board[0][0] = Some(Piece::White(PieceType::King));
-    //     board[1][3] = Some(Piece::White(PieceType::Bishop));
-    //     board[3][4] = Some(Piece::White(PieceType::Pawn));
-    //     board[3][5] = Some(Piece::Black(PieceType::Pawn));
-    //     board[5][7] = Some(Piece::Black(PieceType::King));
+    #[test]
+    fn special_move_enpassant_removes_defender_resulting_in_check() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[0][0] = Some(Piece::White(PieceType::King));
+        board[1][3] = Some(Piece::White(PieceType::Bishop));
+        board[3][4] = Some(Piece::White(PieceType::Pawn));
+        board[3][5] = Some(Piece::Black(PieceType::Pawn));
+        board[5][7] = Some(Piece::Black(PieceType::King));
 
-
-    // }
-
-    // #[test]
-    // fn castle_results_in_check() {
-    //     let mut board = vec![vec![None; 8]; 8];
-
-    // }
+        let new_move = Move { current_pos: (3, 4), new_pos: (2, 5), special_rule: Some(SpecialRule::Enpassant) };
+        move_piece(&new_move, &mut board);
+        assert!(king_is_checked(&mut board, false, &None, &mut CastleState::new()).unwrap());
+    }
 }

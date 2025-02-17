@@ -19,15 +19,15 @@ pub fn move_piece(
             board[moving.current_pos.0][moving.new_pos.1] = None;
         },
         Some(SpecialRule::Castle) => {
-            // if moving.new_pos.1 == 2 {
-            //     let rook = board[moving.new_pos.0][0].clone();
-            //     board[moving.new_pos.0][3] = rook;
-            //     board[moving.new_pos.0][0] = None;
-            // } else if moving.new_pos.1 == 6 {
-            //     let rook = board[moving.new_pos.0][7].clone();
-            //     board[moving.new_pos.0][5] = rook;
-            //     board[moving.new_pos.0][7] = None;
-            // }
+            if moving.new_pos.1 == 2 {
+                let rook = board[moving.new_pos.0][0].clone();
+                board[moving.new_pos.0][3] = rook;
+                board[moving.new_pos.0][0] = None;
+            } else if moving.new_pos.1 == 6 {
+                let rook = board[moving.new_pos.0][7].clone();
+                board[moving.new_pos.0][5] = rook;
+                board[moving.new_pos.0][7] = None;
+            }
         },
         _ => {}
     }
@@ -47,15 +47,15 @@ pub fn unmove_piece(
             board[moving.current_pos.0][moving.new_pos.1] = taken_piece;
         },
         Some(SpecialRule::Castle) => {
-            // if moving.new_pos.1 == 2 {
-            //     let rook = board[moving.new_pos.0][3].clone();
-            //     board[moving.new_pos.0][0] = rook;
-            //     board[moving.new_pos.0][3] = None;
-            // } else if moving.new_pos.1 == 6 {
-            //     let rook = board[moving.new_pos.0][5].clone();
-            //     board[moving.new_pos.0][7] = rook;
-            //     board[moving.new_pos.0][5] = None;
-            // }
+            if moving.new_pos.1 == 2 {
+                let rook = board[moving.new_pos.0][3].clone();
+                board[moving.new_pos.0][0] = rook;
+                board[moving.new_pos.0][3] = None;
+            } else if moving.new_pos.1 == 6 {
+                let rook = board[moving.new_pos.0][5].clone();
+                board[moving.new_pos.0][7] = rook;
+                board[moving.new_pos.0][5] = None;
+            }
         },
         _ => board[moving.new_pos.0][moving.new_pos.1] = taken_piece
     }
