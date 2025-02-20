@@ -10,4 +10,4 @@ repository = "https://github.com/Lenard-0/rust_fish_chess_engine"
 documentation = "https://docs.rs/rust_fish_chess_engine"
 
 [dependencies]
-uuid = "1.13.1"
+uuid = "1.13.2"

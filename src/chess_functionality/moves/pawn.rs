@@ -41,17 +41,24 @@ pub fn calculate_pawn_moves(
         if let Some(Move { current_pos: (prev_starting_ir, ..), new_pos: (prev_current_ir, prev_current_ic), .. }) = previous_move {
             // if old ir is starting rank for black pawn and new ir is 2 up
             // and piece is to the left or right of the pawn and that piece is a black pawn
-            if *prev_starting_ir == 1 && *prev_current_ir == 3 && *prev_current_ir == ir && (*prev_current_ic == ic + 1 || *prev_current_ic == ic - 1) {
-                match board[*prev_current_ir][*prev_current_ic] {
-                    Some(Piece::Black(PieceType::Pawn)) => {
-                        possible_moves.push(Move {
-                            current_pos: (ir, ic),
-                            new_pos: (ir - 1, *prev_current_ic),
-                            special_rule: Some(SpecialRule::Enpassant)
-                        });
-                    },
-                    _ => {}
-                };
+            if *prev_starting_ir == 1
+                && *prev_current_ir == 3
+                && *prev_current_ir == ir
+                && *prev_current_ic < board[0].len() // Prevent out-of-bounds
+                && ((ic > 0 && *prev_current_ic == ic - 1) || (*prev_current_ic == ic + 1)) // Ensure valid left/right move
+            {
+                if ir > 0 { // Prevent underflow for `ir - 1`
+                    match board[*prev_current_ir][*prev_current_ic] {
+                        Some(Piece::Black(PieceType::Pawn)) => {
+                            possible_moves.push(Move {
+                                current_pos: (ir, ic),
+                                new_pos: (ir - 1, *prev_current_ic),
+                                special_rule: Some(SpecialRule::Enpassant),
+                            });
+                        },
+                        _ => {}
+                    };
+                }
             }
         }
     } else {
@@ -88,18 +95,25 @@ pub fn calculate_pawn_moves(
         if let Some(Move { current_pos: (prev_starting_ir, ..), new_pos: (prev_current_ir, prev_current_ic), .. }) = previous_move {
             // if old ir is starting rank for black pawn and new ir is 2 up
             // and piece is to the left or right of the pawn and that piece is a black pawn
-            if *prev_starting_ir == 6 && *prev_current_ir == 4 && *prev_current_ir == ir && (*prev_current_ic == ic + 1 || *prev_current_ic == ic - 1) {
-                match board[*prev_current_ir][*prev_current_ic] {
-                    Some(Piece::White(PieceType::Pawn)) => {
-                        possible_moves.push(Move {
-                            current_pos: (ir, ic),
-                            new_pos: (ir + 1, *prev_current_ic),
-                            special_rule: Some(SpecialRule::Enpassant)
-                        });
-                    },
-                    _ => {}
-                };
-            }
+            if *prev_starting_ir == 6
+                && *prev_current_ir == 4
+                && *prev_current_ir == ir
+                && *prev_current_ic < board[0].len() // Prevent out-of-bounds
+                && ((ic > 0 && *prev_current_ic == ic - 1) || (*prev_current_ic == ic + 1)) // Ensure valid left/right move
+            {
+                if ir < board.len() - 1 { // Prevent overflow for `ir + 1`
+                    match board[*prev_current_ir][*prev_current_ic] {
+                        Some(Piece::White(PieceType::Pawn)) => {
+                            possible_moves.push(Move {
+                                current_pos: (ir, ic),
+                                new_pos: (ir + 1, *prev_current_ic), // Move down for black en passant
+                                special_rule: Some(SpecialRule::Enpassant),
+                            });
+                        },
+                        _ => {}
+                    };
+                }
+    }
         }
     }
 
