@@ -8,7 +8,7 @@ mod tests {
 
     #[test]
     fn engine_can_generate_next_best_move() {
-        let board = vec![
+        let mut board = vec![
             vec![Some(Piece::Black(PieceType::Rook)), None, Some(Piece::Black(PieceType::Bishop)), Some(Piece::Black(PieceType::Queen)), Some(Piece::Black(PieceType::King)), Some(Piece::Black(PieceType::Bishop)), None, Some(Piece::Black(PieceType::Rook))],
             vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), None, None, None, Some(Piece::Black(PieceType::Pawn)), None],
             vec![Some(Piece::Black(PieceType::Pawn)), None, Some(Piece::Black(PieceType::Knight)), None, Some(Piece::White(PieceType::Rook)), Some(Piece::Black(PieceType::Knight)), None, Some(Piece::Black(PieceType::Pawn))],
@@ -19,16 +19,19 @@ mod tests {
             vec![Some(Piece::White(PieceType::Rook)), Some(Piece::White(PieceType::Knight)), Some(Piece::White(PieceType::Bishop)), Some(Piece::White(PieceType::Queen)), None, None, Some(Piece::White(PieceType::King)), None]
         ];
 
-        let castle_state = CastleState::new();
+        let mut castle_state = CastleState::new();
         let whites_turn = false;
-        let engine_calculation = search_for_moves(
+        let alpha = -INFINITY as i32;
+        let beta = INFINITY as i32;
+        let _engine_calculation = search_for_moves(
             3,
-            board,
+            alpha,
+            beta,
+            &mut board,
             whites_turn,
             &None,
-            castle_state
+            &mut castle_state
         ).unwrap();
-
     }
 
     #[test]
@@ -78,7 +81,7 @@ mod tests {
 
     #[test]
     fn engine_can_choose_clear_best_move_taking_piece_with_single_depth() {
-        let board = vec![
+        let mut board = vec![
             vec![Some(Piece::Black(PieceType::Rook)), None, Some(Piece::Black(PieceType::Bishop)), Some(Piece::Black(PieceType::Queen)), Some(Piece::Black(PieceType::King)), Some(Piece::Black(PieceType::Bishop)), None, Some(Piece::Black(PieceType::Rook))],
             vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), None, None, None, Some(Piece::Black(PieceType::Pawn)), None],
             vec![Some(Piece::Black(PieceType::Pawn)), None, Some(Piece::Black(PieceType::Knight)), None, Some(Piece::White(PieceType::Rook)), Some(Piece::Black(PieceType::Knight)), None, Some(Piece::Black(PieceType::Pawn))],
@@ -89,17 +92,20 @@ mod tests {
             vec![Some(Piece::White(PieceType::Rook)), Some(Piece::White(PieceType::Knight)), Some(Piece::White(PieceType::Bishop)), Some(Piece::White(PieceType::Queen)), None, None, Some(Piece::White(PieceType::King)), None]
         ];
 
-
         let whites_turn = false;
         let current_board_score = evaluate_board(&board, whites_turn).unwrap();
         assert_eq!(current_board_score, -200);
-        let castle_state = CastleState::new();
+        let mut castle_state = CastleState::new();
+        let alpha = -10000 as i32;
+        let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
             1,
-            board,
+            alpha,
+            beta,
+            &mut board,
             whites_turn,
             &None,
-            castle_state
+            &mut castle_state
         ).unwrap();
 
         let expected_top_thread = Move {
@@ -114,7 +120,7 @@ mod tests {
 
     #[test]
     fn engine_can_choose_clear_best_move_taking_piece_with_depth_of_3() {
-        let board = vec![
+        let mut board = vec![
             vec![Some(Piece::Black(PieceType::Rook)), None, Some(Piece::Black(PieceType::Bishop)), Some(Piece::Black(PieceType::Queen)), Some(Piece::Black(PieceType::King)), Some(Piece::Black(PieceType::Bishop)), None, Some(Piece::Black(PieceType::Rook))],
             vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), None, None, None, Some(Piece::Black(PieceType::Pawn)), None],
             vec![Some(Piece::Black(PieceType::Pawn)), None, Some(Piece::Black(PieceType::Knight)), None, Some(Piece::White(PieceType::Rook)), Some(Piece::Black(PieceType::Knight)), None, Some(Piece::Black(PieceType::Pawn))],
@@ -129,13 +135,17 @@ mod tests {
         let whites_turn = false;
         let current_board_score = evaluate_board(&board, whites_turn).unwrap();
         assert_eq!(current_board_score, -200);
-        let castle_state = CastleState::new();
+        let mut castle_state = CastleState::new();
+        let alpha = -10000 as i32;
+        let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            6,
-            board,
+            7,
+            alpha,
+            beta,
+            &mut board,
             whites_turn,
             &None,
-            castle_state
+            &mut castle_state
         ).unwrap();
 
         let expected_top_thread = Move {
@@ -150,7 +160,7 @@ mod tests {
 
     #[test]
     fn engine_can_choose_clear_best_move_over_multiple_steps_mate_in_3() {
-        let board = vec![
+        let mut board = vec![
             vec![None, Some(Piece::Black(PieceType::Pawn)), None,None,None,None,None, Some(Piece::Black(PieceType::King))],
             vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn))],
             vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn))],
@@ -164,13 +174,17 @@ mod tests {
 
 
         let whites_turn = false;
-        let castle_state = CastleState::new();
+        let mut castle_state = CastleState::new();
+        let alpha = -INFINITY as i32;
+        let beta = INFINITY as i32;
         let engine_calculation = search_for_moves(
-            3,
-            board,
+            6,
+            alpha,
+            beta,
+            &mut board,
             whites_turn,
             &None,
-            castle_state
+            &mut castle_state
         ).unwrap();
 
         let expected_moves = vec![

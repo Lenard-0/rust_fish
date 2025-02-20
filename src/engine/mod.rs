@@ -10,10 +10,12 @@ pub mod scoring;
 
 pub fn search_for_moves(
     depth: usize,
-    mut board: Vec<Vec<Option<Piece>>>,
+    mut alpha: i32,
+    beta: i32,
+    mut board: &mut Vec<Vec<Option<Piece>>>,
     whites_turn: bool,
     previous_move: &Option<Move>,
-    mut castle_state: CastleState,
+    mut castle_state: &mut CastleState,
 ) -> Result<EngineCalculation, String> {
     if depth == 0 {
         return Ok(EngineCalculation {
@@ -29,7 +31,8 @@ pub fn search_for_moves(
         return match is_checkmate(&mut board, whites_turn, previous_move, &mut castle_state)? {
             true => Ok(EngineCalculation {
                 best_move: None,
-                score: if whites_turn { -INFINITY as i32 } else { INFINITY as i32 },
+                // score: if whites_turn { -INFINITY as i32 } else { INFINITY as i32 },
+                score: if whites_turn { -100000 as i32 } else { 100000 as i32 },
                 move_sequence: vec![], // No move sequence on checkmate/stalemate
             }),
             false => Ok(EngineCalculation {
@@ -40,26 +43,33 @@ pub fn search_for_moves(
         };
     }
 
-    let mut best_evaluation = -INFINITY as i32;
     let mut best_move = moves[0].clone();
     let mut best_sequence = vec![]; // Stores the best move sequence
+    let mut best_evaluation = -INFINITY as i32;
 
     for m in moves {
         let taken_piece = move_piece(&m, &mut board, &mut castle_state);
-        let result = search_for_moves(depth - 1, board.clone(), !whites_turn, &Some(m.clone()), castle_state.clone())?;
+        let result = search_for_moves(depth - 1, -1 * beta, -1 * alpha, &mut board.clone(), !whites_turn, &Some(m.clone()), &mut castle_state.clone())?;
         let evaluation = -result.score; // Negate to switch perspective
-        if evaluation > best_evaluation {
-            best_evaluation = evaluation;
-            best_move = m.clone();
-            best_sequence = result.move_sequence.clone(); // Get the best move sequence
-            best_sequence.insert(0, m.clone()); // Append current move at the start
-        }
         unmove_piece(&m, &mut board, taken_piece, &mut castle_state);
+        if evaluation >= beta {
+            return Ok(EngineCalculation { // prune
+                best_move: Some(m),
+                score: beta,
+                move_sequence: vec![]
+            });
+        }
+        if evaluation > best_evaluation {
+            best_move = m.clone();
+            best_evaluation = evaluation;
+            best_sequence.insert(0, m.clone()); // Add the current move at the start of the sequence
+        }
+        alpha = max(alpha, evaluation);
     }
 
     Ok(EngineCalculation {
         best_move: Some(best_move),
-        score: best_evaluation,
+        score: alpha,
         move_sequence: best_sequence, // Return the best sequence of moves
     })
 }
