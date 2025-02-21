@@ -167,7 +167,7 @@ mod tests {
             vec![None, None, None, None, None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn))],
             vec![None, None, None, None, None, None, None, None],
             vec![None, None, None, None, None, None, None, None],
-            vec![None, Some(Piece::White(PieceType::King)), None, None, None, None, None, None],
+            vec![None, Some(Piece::White(PieceType::King)), None, None, None, None, None, Some(Piece::Black(PieceType::Pawn))],
             vec![None, None, None, None, None, None, None, Some(Piece::White(PieceType::Rook))]
         ];
 
@@ -178,7 +178,7 @@ mod tests {
         let alpha = -10000 as i32;
         let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            7, // 1 extra depth to ensure mate in 3 and to ensure it doesn't fail past this
+            8, // 1 extra depth to ensure mate in 3 and to ensure it doesn't fail past this
             alpha,
             beta,
             &mut board,

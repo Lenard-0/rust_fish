@@ -1,8 +1,8 @@
 
 #[cfg(test)]
 mod tests {
-    use rust_fish_chess_engine::{chess_functionality::moves::{calculate_possible_moves, king::CastleState, Move}, Piece, PieceType};
-
+    use rust_fish_chess_engine::{chess_functionality::moves::{calculate_possible_moves, king::CastleState, move_piece::unmove_piece, Move, SpecialRule}, Piece, PieceType};
+    use rust_fish_chess_engine::chess_functionality::moves::move_piece::move_piece;
     #[test]
     fn white_pawn_moves_one_or_two_steps_forward_from_start() {
         let mut board = vec![vec![None; 8]; 8];
@@ -169,6 +169,242 @@ mod tests {
         for m in possible_moves {
             assert!(expected_moves.contains(&m.new_pos), "Unexpected move: {:?}", m.new_pos);
         }
+    }
+
+    #[test]
+    fn white_pawn_can_promote_moving_one_up() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[1][0] = Some(Piece::White(PieceType::Pawn));
+
+        let expected_moves = vec![
+            Move {
+                current_pos: (1, 0),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (1, 0),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (1, 0),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (1, 0),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            }
+        ];
+
+        let possible_moves = calculate_possible_moves(1, 0, &mut board, false, true, &None, &mut CastleState::new(), false).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m), "Unexpected move: {:?}", m);
+        }
+    }
+
+    #[test]
+    fn white_pawn_can_promote_moving_taking_either_side() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[1][1] = Some(Piece::White(PieceType::Pawn));
+        board[0][0] = Some(Piece::Black(PieceType::Pawn));
+        board[0][2] = Some(Piece::Black(PieceType::Pawn));
+
+        let expected_moves = vec![
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (1, 1),
+                new_pos: (0, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            }
+        ];
+
+        let possible_moves = calculate_possible_moves(1, 1, &mut board, false, true, &None, &mut CastleState::new(), false).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m), "Unexpected move: {:?}", m);
+        }
+    }
+
+    #[test]
+    fn black_pawn_can_promote() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[6][1] = Some(Piece::Black(PieceType::Pawn));
+        board[7][0] = Some(Piece::White(PieceType::Pawn));
+        board[7][2] = Some(Piece::White(PieceType::Pawn));
+
+        let expected_moves = vec![
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 0),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 2),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos: (6, 1),
+                new_pos: (7, 1),
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            },
+        ];
+
+        let possible_moves = calculate_possible_moves(6, 1, &mut board, false, false, &None, &mut CastleState::new(), false).unwrap();
+        assert_eq!(possible_moves.len(), expected_moves.len(), "Expected and actual moves differ in count");
+        for m in possible_moves {
+            assert!(expected_moves.contains(&m), "Unexpected move: {:?}", m);
+        }
+    }
+
+    #[test]
+    fn promotion_move_works_correctly() {
+        let mut board = vec![vec![None; 8]; 8];
+        board[1][0] = Some(Piece::White(PieceType::Pawn));
+
+        let new_move = Move {
+            current_pos: (1, 0),
+            new_pos: (0, 0),
+            special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+        };
+        let mut expected_board = vec![vec![None; 8]; 8];
+        expected_board[0][0] = Some(Piece::White(PieceType::Knight));
+        move_piece(&new_move, &mut board, &mut CastleState::new());
+        assert_eq!(board, expected_board);
+        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+
+        let new_move = Move {
+            current_pos: (1, 0),
+            new_pos: (0, 0),
+            special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+        };
+        expected_board[0][0] = Some(Piece::White(PieceType::Bishop));
+        move_piece(&new_move, &mut board, &mut CastleState::new());
+        assert_eq!(board, expected_board);
+        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+
+        let new_move = Move {
+            current_pos: (1, 0),
+            new_pos: (0, 0),
+            special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+        };
+        expected_board[0][0] = Some(Piece::White(PieceType::Rook));
+        move_piece(&new_move, &mut board, &mut CastleState::new());
+        assert_eq!(board, expected_board);
+        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+
+        let new_move = Move {
+            current_pos: (1, 0),
+            new_pos: (0, 0),
+            special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+        };
+        expected_board[0][0] = Some(Piece::White(PieceType::Queen));
+        move_piece(&new_move, &mut board, &mut CastleState::new());
+        assert_eq!(board, expected_board);
+        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
     }
 
 }

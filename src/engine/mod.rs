@@ -28,14 +28,14 @@ pub fn search_for_moves(
     let moves = all_possible_moves(&mut board, whites_turn, previous_move, &mut castle_state, false)?;
 
     if moves.is_empty() {
-        return match king_is_checked(&mut board, whites_turn, previous_move, &mut castle_state)? {
-            true => Ok(EngineCalculation {
+        return match king_is_checked(&mut board, whites_turn, previous_move, &mut castle_state) {
+            Ok(true) | Err(_) => Ok(EngineCalculation {
                 best_move: None,
                 // score: if whites_turn { -INFINITY as i32 } else { INFINITY as i32 },
-                score: if whites_turn { -100000 as i32 } else { 100000 as i32 },
+                score: -10000,
                 move_sequence: vec![], // No move sequence on checkmate/stalemate
             }),
-            false => Ok(EngineCalculation {
+            Ok(false) => Ok(EngineCalculation {
                 best_move: None,
                 score: 0,
                 move_sequence: vec![],

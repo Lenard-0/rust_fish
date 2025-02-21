@@ -29,13 +29,38 @@ impl Move {
                 special_rule: None,
             })
     }
+
+    pub fn all_possible_promotion_moves(current_pos: (usize, usize), new_pos: (usize, usize)) -> Vec<Self> {
+        vec![
+            Move {
+                current_pos,
+                new_pos,
+                special_rule: Some(SpecialRule::Promotion(PieceType::Queen))
+            },
+            Move {
+                current_pos,
+                new_pos,
+                special_rule: Some(SpecialRule::Promotion(PieceType::Rook))
+            },
+            Move {
+                current_pos,
+                new_pos,
+                special_rule: Some(SpecialRule::Promotion(PieceType::Bishop))
+            },
+            Move {
+                current_pos,
+                new_pos,
+                special_rule: Some(SpecialRule::Promotion(PieceType::Knight))
+            }
+        ]
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum SpecialRule {
     Enpassant,
     Castle,
-    Promotion
+    Promotion(PieceType)
 }
 
 pub fn calculate_possible_moves(

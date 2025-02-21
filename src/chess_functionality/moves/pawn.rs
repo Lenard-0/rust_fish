@@ -12,7 +12,10 @@ pub fn calculate_pawn_moves(
     if whites_turn {
         let tile_one_up = board[ir - 1][ic].clone();
         if tile_one_up.is_none() {
-            possible_moves.push(Move::from_position((ir, ic), (ir - 1, ic))?);
+            match ir - 1 == 0 {
+                true => possible_moves.extend(Move::all_possible_promotion_moves((ir, ic), (ir - 1, ic))),
+                false => possible_moves.push(Move::from_position((ir, ic), (ir - 1, ic))?)
+            };
         }
         if ir == 6 {
             if tile_one_up.is_none() && board[ir - 2][ic].is_none() {
@@ -24,6 +27,7 @@ pub fn calculate_pawn_moves(
         if ic != 0 {
             let tile = &board[ir - 1][ic - 1];
             match tile {
+                Some(Piece::Black(_)) if ir - 1 == 0 => possible_moves.extend(Move::all_possible_promotion_moves((ir, ic), (ir - 1, ic - 1))),
                 Some(Piece::Black(_)) => possible_moves.push(Move::from_position((ir, ic), (ir - 1, ic - 1))?),
                 _ => {}
             };
@@ -32,6 +36,7 @@ pub fn calculate_pawn_moves(
         if ic != 7 {
             let tile = &board[ir - 1][ic + 1];
             match tile {
+                Some(Piece::Black(_)) if ir - 1 == 0 => possible_moves.extend(Move::all_possible_promotion_moves((ir, ic), (ir - 1, ic + 1))),
                 Some(Piece::Black(_)) => possible_moves.push(Move::from_position((ir, ic), (ir - 1, ic + 1))?),
                 _ => {}
             };
@@ -64,7 +69,10 @@ pub fn calculate_pawn_moves(
     } else {
         let tile_one_up = board[ir + 1][ic].clone();
         if tile_one_up.is_none() {
-            possible_moves.push(Move::from_position((ir, ic), (ir + 1, ic))?);
+            match ir + 1 == 7 {
+                true => possible_moves.extend(Move::all_possible_promotion_moves((ir, ic), (ir + 1, ic))),
+                false => possible_moves.push(Move::from_position((ir, ic), (ir + 1, ic))?)
+            };
         }
         if ir == 1 {
             let tile_two_up = &board[ir + 2][ic];
@@ -77,6 +85,7 @@ pub fn calculate_pawn_moves(
         if ic != 7 {
             let tile = &board[ir + 1][ic + 1];
             match tile {
+                Some(Piece::White(_)) if ir + 1 == 7 => possible_moves.extend(Move::all_possible_promotion_moves((ir, ic), (ir + 1, ic + 1))),
                 Some(Piece::White(_)) => possible_moves.push(Move::from_position((ir, ic), (ir + 1, ic + 1))?),
                 _ => {}
             };
@@ -85,6 +94,7 @@ pub fn calculate_pawn_moves(
         if ic != 0 {
             let tile = &board[ir + 1][ic - 1];
             match tile {
+                Some(Piece::White(_)) if ir + 1 == 7 => possible_moves.extend(Move::all_possible_promotion_moves((ir, ic), (ir + 1, ic - 1))),
                 Some(Piece::White(_)) => possible_moves.push(Move::from_position((ir, ic), (ir + 1, ic - 1))?),
                 _ => {}
             };
