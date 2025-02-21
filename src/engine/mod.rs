@@ -51,7 +51,7 @@ pub fn search_for_moves(
         let taken_piece = move_piece(&m, &mut board, &mut castle_state);
         let result = search_for_moves(depth - 1, -1 * beta, -1 * alpha, &mut board, !whites_turn, &Some(m.clone()), &mut castle_state)?;
         let evaluation = -result.score; // Negate to switch perspective
-        unmove_piece(&m, &mut board, taken_piece, &mut castle_state);
+        unmove_piece(&m, &mut board, taken_piece, &mut castle_state)?;
         if evaluation >= beta {
             return Ok(EngineCalculation { // prune
                 best_move: Some(m),

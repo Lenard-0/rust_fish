@@ -68,10 +68,13 @@ pub fn unmove_piece(
                 board[moving.new_pos.0][5] = None;
             }
         },
-        Some(SpecialRule::Promotion(_)) => board[moving.new_pos.0][moving.new_pos.1] = match piece {
-            Some(Piece::White(_)) => Some(Piece::White(PieceType::Pawn)),
-            Some(Piece::Black(_)) => Some(Piece::Black(PieceType::Pawn)),
-            None => return Err(format!("No piece to undo promote: {:?} {:?}", moving, board))
+        Some(SpecialRule::Promotion(_)) => {
+            board[moving.current_pos.0][moving.current_pos.1] = match piece {
+                Some(Piece::White(_)) => Some(Piece::White(PieceType::Pawn)),
+                Some(Piece::Black(_)) => Some(Piece::Black(PieceType::Pawn)),
+                None => return Err(format!("No piece to undo promote: {:?} {:?}", moving, board))
+            };
+            board[moving.new_pos.0][moving.new_pos.1] = taken_piece;
         },
         None => board[moving.new_pos.0][moving.new_pos.1] = taken_piece
     }

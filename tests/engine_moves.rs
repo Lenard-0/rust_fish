@@ -2,8 +2,6 @@
 
 #[cfg(test)]
 mod tests {
-    use std::f32::INFINITY;
-
     use rust_fish_chess_engine::{chess_functionality::moves::{king::CastleState, Move}, engine::{scoring::evaluate_board, search_for_moves}, Piece, PieceType};
 
     #[test]
@@ -21,8 +19,8 @@ mod tests {
 
         let mut castle_state = CastleState::new();
         let whites_turn = false;
-        let alpha = -INFINITY as i32;
-        let beta = INFINITY as i32;
+        let alpha = -10000 as i32;
+        let beta = 10000 as i32;
         let _engine_calculation = search_for_moves(
             3,
             alpha,
@@ -167,7 +165,7 @@ mod tests {
             vec![None, None, None, None, None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn))],
             vec![None, None, None, None, None, None, None, None],
             vec![None, None, None, None, None, None, None, None],
-            vec![None, Some(Piece::White(PieceType::King)), None, None, None, None, None, Some(Piece::Black(PieceType::Pawn))],
+            vec![None, Some(Piece::White(PieceType::King)), None, None, None, None, None, None],
             vec![None, None, None, None, None, None, None, Some(Piece::White(PieceType::Rook))]
         ];
 
@@ -178,7 +176,7 @@ mod tests {
         let alpha = -10000 as i32;
         let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            8, // 1 extra depth to ensure mate in 3 and to ensure it doesn't fail past this
+            8, // some extra depth to ensure mate in 3 and to ensure it doesn't fail past this
             alpha,
             beta,
             &mut board,

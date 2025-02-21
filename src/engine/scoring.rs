@@ -1,6 +1,5 @@
-use std::f32::INFINITY;
 
-use crate::{chess_functionality::{game_over::is_checkmate, moves::{king::CastleState, Move}}, utils::for_each_tile, Piece, PieceType};
+use crate::{utils::for_each_tile, Piece, PieceType};
 
 pub const ROOK_VALUE: i32 = 500;
 pub const KNIGHT_VALUE: i32 = 300;

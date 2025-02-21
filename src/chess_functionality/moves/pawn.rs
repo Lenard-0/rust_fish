@@ -67,6 +67,9 @@ pub fn calculate_pawn_moves(
             }
         }
     } else {
+        if ir == 7 {
+            println!("board: {:?}", board);
+        }
         let tile_one_up = board[ir + 1][ic].clone();
         if tile_one_up.is_none() {
             match ir + 1 == 7 {
