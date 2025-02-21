@@ -47,10 +47,8 @@ pub fn unmove_piece(
     moving: &Move,
     board: &mut Vec<Vec<Option<Piece>>>,
     taken_piece: Option<Piece>,
-    castle_state: &mut CastleState,
 ) -> Result<(), String> {
     let piece = board[moving.new_pos.0][moving.new_pos.1].clone();
-    unupdate_castle_state(moving, &piece, castle_state);
     board[moving.current_pos.0][moving.current_pos.1] = piece.clone();
 
     match moving.special_rule {
@@ -94,32 +92,32 @@ fn update_castle_state(moving: &Move, castle_state: &mut CastleState) {
     }
 }
 
-fn unupdate_castle_state(moving: &Move, piece: &Option<Piece>, castle_state: &mut CastleState) {
-    match moving.current_pos {
-        (0, 4) => match piece {
-            Some(Piece::Black(PieceType::King)) => castle_state.black_king_moved = false,
-            _ => {}
-        },
-        (0, 0) => match piece {
-            Some(Piece::Black(PieceType::Rook)) => castle_state.black_left_rook_moved = false,
-            _ => {}
-        },
-        (0, 7) => match piece {
-            Some(Piece::Black(PieceType::Rook)) => castle_state.black_right_rook_moved = false,
-            _ => {}
-        },
-        (7, 4) => match piece {
-            Some(Piece::White(PieceType::King)) => castle_state.white_king_moved = false,
-            _ => {}
-        },
-        (7, 0) => match piece {
-            Some(Piece::White(PieceType::Rook)) => castle_state.white_left_rook_moved = false,
-            _ => {}
-        },
-        (7, 7) => match piece {
-            Some(Piece::White(PieceType::Rook)) => castle_state.white_right_rook_moved = false,
-            _ => {}
-        },
-        _ => {}
-    }
-}
+// fn unupdate_castle_state(moving: &Move, piece: &Option<Piece>, castle_state: &mut CastleState) {
+//     match moving.current_pos {
+//         (0, 4) => match piece {
+//             Some(Piece::Black(PieceType::King)) => castle_state.black_king_moved = false,
+//             _ => {}
+//         },
+//         (0, 0) => match piece {
+//             Some(Piece::Black(PieceType::Rook)) => castle_state.black_left_rook_moved = false,
+//             _ => {}
+//         },
+//         (0, 7) => match piece {
+//             Some(Piece::Black(PieceType::Rook)) => castle_state.black_right_rook_moved = false,
+//             _ => {}
+//         },
+//         (7, 4) => match piece {
+//             Some(Piece::White(PieceType::King)) => castle_state.white_king_moved = false,
+//             _ => {}
+//         },
+//         (7, 0) => match piece {
+//             Some(Piece::White(PieceType::Rook)) => castle_state.white_left_rook_moved = false,
+//             _ => {}
+//         },
+//         (7, 7) => match piece {
+//             Some(Piece::White(PieceType::Rook)) => castle_state.white_right_rook_moved = false,
+//             _ => {}
+//         },
+//         _ => {}
+//     }
+// }

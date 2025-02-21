@@ -118,11 +118,11 @@ fn all_tiles_free_from_check(
             board,
             castle_state
         );
-        if king_is_checked(board, whites_turn, previous_move, castle_state)? {
-            unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece, castle_state)?;
+        if king_is_checked(board, whites_turn, previous_move, &mut castle_state.clone())? {
+            unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece)?;
             return Ok(false)
         }
-        unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece, castle_state)?;
+        unmove_piece(&Move { current_pos: king_position, new_pos: tile, special_rule: None }, board, taken_piece)?;
     }
 
     Ok(true)

@@ -409,7 +409,7 @@ mod tests {
         expected_board[0][0] = Some(Piece::White(PieceType::Knight));
         move_piece(&new_move, &mut board, &mut CastleState::new());
         assert_eq!(board, expected_board);
-        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&new_move, &mut board, None).unwrap();
 
         let new_move = Move {
             current_pos: (1, 0),
@@ -419,7 +419,7 @@ mod tests {
         expected_board[0][0] = Some(Piece::White(PieceType::Bishop));
         move_piece(&new_move, &mut board, &mut CastleState::new());
         assert_eq!(board, expected_board);
-        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&new_move, &mut board, None).unwrap();
 
         let new_move = Move {
             current_pos: (1, 0),
@@ -429,7 +429,7 @@ mod tests {
         expected_board[0][0] = Some(Piece::White(PieceType::Rook));
         move_piece(&new_move, &mut board, &mut CastleState::new());
         assert_eq!(board, expected_board);
-        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&new_move, &mut board, None).unwrap();
 
         let new_move = Move {
             current_pos: (1, 0),
@@ -439,7 +439,7 @@ mod tests {
         expected_board[0][0] = Some(Piece::White(PieceType::Queen));
         move_piece(&new_move, &mut board, &mut CastleState::new());
         assert_eq!(board, expected_board);
-        unmove_piece(&new_move, &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&new_move, &mut board, None).unwrap();
     }
 
     #[test]
@@ -479,28 +479,28 @@ mod tests {
         move_piece(&possible_moves[0], &mut board, &mut CastleState::new());
         assert_eq!(board[7][7], Some(Piece::Black(PieceType::Queen)));
         assert_eq!(board[6][7], None);
-        unmove_piece(&possible_moves[0], &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&possible_moves[0], &mut board, None).unwrap();
         assert_eq!(board[7][7], None);
         assert_eq!(board[6][7], Some(Piece::Black(PieceType::Pawn)));
 
         move_piece(&possible_moves[1], &mut board, &mut CastleState::new());
         assert_eq!(board[7][7], Some(Piece::Black(PieceType::Rook)));
         assert_eq!(board[6][7], None);
-        unmove_piece(&possible_moves[1], &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&possible_moves[1], &mut board, None).unwrap();
         assert_eq!(board[7][7], None);
         assert_eq!(board[6][7], Some(Piece::Black(PieceType::Pawn)));
 
         move_piece(&possible_moves[2], &mut board, &mut CastleState::new());
         assert_eq!(board[7][7], Some(Piece::Black(PieceType::Bishop)));
         assert_eq!(board[6][7], None);
-        unmove_piece(&possible_moves[2], &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&possible_moves[2], &mut board, None).unwrap();
         assert_eq!(board[7][7], None);
         assert_eq!(board[6][7], Some(Piece::Black(PieceType::Pawn)));
 
         move_piece(&possible_moves[3], &mut board, &mut CastleState::new());
         assert_eq!(board[7][7], Some(Piece::Black(PieceType::Knight)));
         assert_eq!(board[6][7], None);
-        unmove_piece(&possible_moves[3], &mut board, None, &mut CastleState::new()).unwrap();
+        unmove_piece(&possible_moves[3], &mut board, None).unwrap();
         assert_eq!(board[7][7], None);
         assert_eq!(board[6][7], Some(Piece::Black(PieceType::Pawn)));
     }

@@ -1,12 +1,12 @@
 use std::{cmp::max, f64::INFINITY};
-
 use move_thread::EngineCalculation;
+use ordering::order_moves;
 use scoring::evaluate_board;
-
 use crate::{chess_functionality::moves::{check::{all_possible_moves, king_is_checked}, king::CastleState, move_piece::{move_piece, unmove_piece}, Move}, Piece};
 
 pub mod move_thread;
 pub mod scoring;
+pub mod ordering;
 
 pub fn search_for_moves(
     depth: usize,
@@ -21,7 +21,7 @@ pub fn search_for_moves(
         return Ok(EngineCalculation {
             score: evaluate_board(&board, whites_turn)?,
             best_move: None,
-            move_sequence: vec![], // No move sequence at depth 0
+            // move_sequence: vec![], // No move sequence at depth 0
         });
     }
 
@@ -33,12 +33,12 @@ pub fn search_for_moves(
                 best_move: None,
                 // score: if whites_turn { -INFINITY as i32 } else { INFINITY as i32 },
                 score: -10000,
-                move_sequence: vec![], // No move sequence on checkmate/stalemate
+                // move_sequence: vec![], // No move sequence on checkmate/stalemate
             }),
             Ok(false) => Ok(EngineCalculation {
                 best_move: None,
                 score: 0,
-                move_sequence: vec![],
+                // move_sequence: vec![],
             }),
         };
     }
@@ -47,16 +47,25 @@ pub fn search_for_moves(
     let mut best_sequence = vec![]; // Stores the best move sequence
     let mut best_evaluation = -INFINITY as i32;
 
-    for m in moves {
-        let taken_piece = move_piece(&m, &mut board, &mut castle_state);
-        let result = search_for_moves(depth - 1, -1 * beta, -1 * alpha, &mut board, !whites_turn, &Some(m.clone()), &mut castle_state)?;
+    let ordered_moves = order_moves(moves, board, whites_turn)?;
+    for m in ordered_moves {
+        let taken_piece = move_piece(&m, &mut board, &mut castle_state.clone());
+        let result = search_for_moves(
+            depth - 1,
+            -1 * beta,
+            -1 * alpha,
+            &mut board,
+            !whites_turn,
+            &Some(m.clone()),
+            &mut castle_state
+        )?;
         let evaluation = -result.score; // Negate to switch perspective
-        unmove_piece(&m, &mut board, taken_piece, &mut castle_state)?;
+        unmove_piece(&m, &mut board, taken_piece)?;
         if evaluation >= beta {
             return Ok(EngineCalculation { // prune
                 best_move: Some(m),
                 score: beta,
-                move_sequence: vec![]
+                // move_sequence: vec![]
             });
         }
         if evaluation > best_evaluation {
@@ -70,6 +79,6 @@ pub fn search_for_moves(
     Ok(EngineCalculation {
         best_move: Some(best_move),
         score: alpha,
-        move_sequence: best_sequence, // Return the best sequence of moves
+        // move_sequence: best_sequence, // Return the best sequence of moves
     })
 }

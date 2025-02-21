@@ -5,5 +5,5 @@ use crate::chess_functionality::moves::Move;
 pub struct EngineCalculation {
     pub best_move: Option<Move>,
     pub score: i32,
-    pub move_sequence: Vec<Move>,
+    // pub move_sequence: Vec<Move>,
 }
