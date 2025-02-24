@@ -49,6 +49,11 @@ pub fn search_for_moves(
 
     let ordered_moves = order_moves(moves, board, whites_turn)?;
     for m in ordered_moves {
+        let piece_type_moving = match board[m.current_pos.1][m.current_pos.0].clone() {
+            Some(Piece::Black(piece_type)) | Some(Piece::White(piece_type)) => piece_type,
+            None => return Err("No piece found on the square".to_string())
+        };
+        let moving_tile_affinity_value = piece_type_moving.tile_affinity(m.new_pos.0, m.new_pos.1, whites_turn);
         let taken_piece = move_piece(&m, &mut board, &mut castle_state.clone());
         let result = search_for_moves(
             depth - 1,
@@ -59,7 +64,10 @@ pub fn search_for_moves(
             &Some(m.clone()),
             &mut castle_state
         )?;
-        let evaluation = -result.score - force_king_to_corner_endgame_eval(board, !whites_turn)?; // Negate to switch perspective
+        let mut evaluation = -result.score;
+        evaluation += moving_tile_affinity_value;
+        let endgame_eval = force_king_to_corner_endgame_eval(board, !whites_turn)?;
+        evaluation += endgame_eval;
         unmove_piece(&m, &mut board, taken_piece)?;
         if evaluation >= beta {
             return Ok(EngineCalculation { // prune

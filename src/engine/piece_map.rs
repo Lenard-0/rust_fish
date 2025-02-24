@@ -2,29 +2,88 @@
 // The point of this is to give slight evaluation bumps to squares that a piece generally
 // prefers to sit on. For example, a knight prefers to sit in the center of the board
 
+use crate::PieceType;
+
+pub const PAWN_TABLE: [[i32; 8]; 8] = [
+    [ 0,   0,   0,   0,   0,   0,   0,   0],
+    [50,  50,  50,  50,  50,  50,  50,  50],
+    [10,  10,  20,  30,  30,  20,  10,  10],
+    [ 5,   5,  10,  25,  25,  10,   5,   5],
+    [ 0,   0,   0,  20,  20,   0,   0,   0],
+    [ 5,  -5, -10,   0,   0, -10,  -5,   5],
+    [ 5,  10,  10, -20, -20,  10,  10,   5],
+    [ 0,   0,   0,   0,   0,   0,   0,   0]
+];
+
+pub const KNIGHT_TABLE: [[i32; 8]; 8] = [
+    [-50, -40, -30, -30, -30, -30, -40, -50],
+    [-40, -20,   0,   5,   5,   0, -20, -40],
+    [-30,   5,  10,  15,  15,  10,   5, -30],
+    [-30,   0,  15,  20,  20,  15,   0, -30],
+    [-30,   5,  15,  20,  20,  15,   5, -30],
+    [-30,   0,  10,  15,  15,  10,   0, -30],
+    [-40, -20,   0,   0,   0,   0, -20, -40],
+    [-50, -40, -30, -30, -30, -30, -40, -50]
+];
+
+pub const BISHOP_TABLE: [[i32; 8]; 8] = [
+    [-20, -10, -10, -10, -10, -10, -10, -20],
+    [-10,   5,   0,   0,   0,   0,   5, -10],
+    [-10,  10,  10,  10,  10,  10,  10, -10],
+    [-10,   0,  10,  10,  10,  10,   0, -10],
+    [-10,   5,   5,  10,  10,   5,   5, -10],
+    [-10,   0,   5,  10,  10,   5,   0, -10],
+    [-10,   0,   0,   0,   0,   0,   0, -10],
+    [-20, -10, -10, -10, -10, -10, -10, -20]
+];
+
+pub const ROOK_TABLE: [[i32; 8]; 8] = [
+    [ 0,   0,   0,   5,   5,   0,   0,   0],
+    [-5,   0,   0,   0,   0,   0,   0,  -5],
+    [-5,   0,   0,   0,   0,   0,   0,  -5],
+    [-5,   0,   0,   0,   0,   0,   0,  -5],
+    [-5,   0,   0,   0,   0,   0,   0,  -5],
+    [-5,   0,   0,   0,   0,   0,   0,  -5],
+    [ 5,  10,  10,  10,  10,  10,  10,   5],
+    [ 0,   0,   0,   0,   0,   0,   0,   0]
+];
+
+pub const QUEEN_TABLE: [[i32; 8]; 8] = [
+    [-20, -10, -10,  -5,  -5, -10, -10, -20],
+    [-10,   0,   0,   0,   0,   0,   0, -10],
+    [-10,   0,   5,   5,   5,   5,   0, -10],
+    [ -5,   0,   5,   5,   5,   5,   0,  -5],
+    [  0,   0,   5,   5,   5,   5,   0,  -5],
+    [-10,   5,   5,   5,   5,   5,   0, -10],
+    [-10,   0,   5,   0,   0,   0,   0, -10],
+    [-20, -10, -10,  -5,  -5, -10, -10, -20]
+];
+
+pub const KING_TABLE: [[i32; 8]; 8] = [
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-20, -30, -30, -40, -40, -30, -30, -20],
+    [-10, -20, -20, -20, -20, -20, -20, -10],
+    [ 20,  20,   0,   0,   0,   0,  20,  20],
+    [ 20,  30,  10,   0,   0,  10,  30,  20]
+];
 
 
 impl PieceType {
-    pub fn get_piece_square_table_value(&self, row: usize, col: usize) -> i32 {
-        match self {
-            PieceType::Pawn => {
-                return PAWN_TABLE[row][col]
-            },
-            PieceType::Knight => {
-                return KNIGHT_TABLE[row][col]
-            },
-            PieceType::Bishop => {
-                return BISHOP_TABLE[row][col]
-            },
-            PieceType::Rook => {
-                return ROOK_TABLE[row][col]
-            },
-            PieceType::Queen => {
-                return QUEEN_TABLE[row][col]
-            },
-            PieceType::King => {
-                return KING_TABLE[row][col]
-            }
-        }
+    pub fn tile_affinity(&self, row: usize, col: usize, whites_turn: bool) -> i32 {
+        let board_map = match self {
+            PieceType::Pawn => PAWN_TABLE,
+            PieceType::Knight => KNIGHT_TABLE,
+            PieceType::Bishop => BISHOP_TABLE,
+            PieceType::Rook => ROOK_TABLE,
+            PieceType::Queen => QUEEN_TABLE,
+            PieceType::King => KING_TABLE,
+        };
+
+        let adjusted_row = if whites_turn { row } else { 7 - row }; // Flip the row index for Black
+
+        board_map[adjusted_row][col]
     }
 }
