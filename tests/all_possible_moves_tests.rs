@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use rust_fish_chess_engine::{chess_functionality::moves::{check::all_possible_moves, king::CastleState, Move, SpecialRule}, Piece, PieceType};
+    use rust_fish_chess_engine::{chess_functionality::moves::{check::all_possible_moves, king::CastleState, SpecialRule}, Piece, PieceType};
 
 
     #[test]
@@ -28,7 +28,8 @@ mod tests {
             whites_turn,
             &None,
             &mut castle_state,
-            false
+            false,
+            true
         ).unwrap();
 
         // assert no moves are special move castle
@@ -41,7 +42,8 @@ mod tests {
             !whites_turn,
             &None,
             &mut castle_state,
-            false
+            false,
+            true
         ).unwrap();
 
         // assert no moves are special move castle

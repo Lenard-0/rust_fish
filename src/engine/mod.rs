@@ -25,7 +25,7 @@ pub fn search_for_moves(
         });
     }
 
-    let moves = all_possible_moves(&mut board, whites_turn, previous_move, &mut castle_state, false)?;
+    let moves = all_possible_moves(&mut board, whites_turn, previous_move, &mut castle_state, false, true)?;
 
     if moves.is_empty() {
         return match king_is_checked(&mut board, whites_turn, previous_move, &mut castle_state) {

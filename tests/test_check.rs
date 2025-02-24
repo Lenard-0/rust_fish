@@ -130,4 +130,32 @@ mod tests {
         move_piece(&new_move, &mut board, &mut CastleState::new());
         assert!(king_is_checked(&mut board, false, &None, &mut CastleState::new()).unwrap());
     }
+
+    #[test]
+    fn can_only_move_knight_to_block_check() {
+        let mut board = vec![
+            vec![Some(Piece::Black(PieceType::Rook)), None, Some(Piece::Black(PieceType::Bishop)), Some(Piece::Black(PieceType::Queen)), Some(Piece::Black(PieceType::King)), Some(Piece::Black(PieceType::Bishop)), None, Some(Piece::Black(PieceType::Rook))],
+            vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), None, None, None, Some(Piece::Black(PieceType::Pawn)), None],
+            vec![Some(Piece::Black(PieceType::Pawn)), None, Some(Piece::Black(PieceType::Knight)), None, Some(Piece::White(PieceType::Rook)), Some(Piece::Black(PieceType::Knight)), None, Some(Piece::Black(PieceType::Pawn))],
+            vec![None, None, None, None, None, None, None, None],
+            vec![None, None, Some(Piece::White(PieceType::Bishop)), None, None, None, None, None],
+            vec![None, None, None, None, None, Some(Piece::White(PieceType::Knight)), None, None],
+            vec![Some(Piece::White(PieceType::Pawn)), Some(Piece::White(PieceType::Pawn)), Some(Piece::White(PieceType::Pawn)), Some(Piece::White(PieceType::Pawn)), None, Some(Piece::White(PieceType::Pawn)), Some(Piece::White(PieceType::Pawn)), Some(Piece::White(PieceType::Pawn))],
+            vec![Some(Piece::White(PieceType::Rook)), Some(Piece::White(PieceType::Knight)), Some(Piece::White(PieceType::Bishop)), Some(Piece::White(PieceType::Queen)), None, None, Some(Piece::White(PieceType::King)), None]
+        ];
+
+        let whites_turn = false;
+        let possible_moves = calculate_possible_moves(
+            2,
+            2,
+            &mut board,
+            true,
+            whites_turn,
+            &None,
+            &mut CastleState::new(),
+            false
+        ).unwrap();
+
+        assert_eq!(possible_moves, vec![Move { current_pos: (2, 2), new_pos: (1, 4), special_rule: None }]);
+    }
 }

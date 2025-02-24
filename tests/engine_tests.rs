@@ -227,7 +227,7 @@ mod tests {
         let alpha = -10000 as i32;
         let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            6,
+            7,
             alpha,
             beta,
             &mut board,
