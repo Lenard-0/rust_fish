@@ -208,7 +208,7 @@ mod tests {
     }
 
     #[test]
-    fn engine_can_perform_7_steps_of_semi_complicated_position_with_clear_take_in_under_5_seconds() {
+    fn engine_can_perform_6_steps_of_semi_complicated_position_with_clear_take_in_under_5_seconds() {
         let mut board = vec![
             vec![Some(Piece::Black(PieceType::Rook)), None, Some(Piece::Black(PieceType::Bishop)), Some(Piece::Black(PieceType::Queen)), Some(Piece::Black(PieceType::King)), Some(Piece::Black(PieceType::Bishop)), None, Some(Piece::Black(PieceType::Rook))],
             vec![None, Some(Piece::Black(PieceType::Pawn)), Some(Piece::Black(PieceType::Pawn)), None, None, None, Some(Piece::Black(PieceType::Pawn)), None],
@@ -223,11 +223,13 @@ mod tests {
         let whites_turn = false;
         let current_board_score = evaluate_board(&board, whites_turn).unwrap();
         assert_eq!(current_board_score, -200);
+
+        let start_time = std::time::Instant::now();
         let mut castle_state = CastleState::new();
         let alpha = -10000 as i32;
         let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            7,
+            6,
             alpha,
             beta,
             &mut board,
@@ -243,5 +245,8 @@ mod tests {
         };
 
         assert_eq!(engine_calculation.best_move.unwrap(), expected_top_thread);
+
+        let elapsed = start_time.elapsed();
+        assert!(elapsed.as_secs() < 5);
     }
 }

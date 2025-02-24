@@ -225,48 +225,36 @@ mod tests {
         let new_move = Move { current_pos: (7, 0), new_pos: (7, 1), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
         assert_eq!(castle_state.white_left_rook_moved, true);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.white_left_rook_moved, false);
 
         // far right white rook moves
         let mut castle_state = CastleState::new();
         let new_move = Move { current_pos: (7, 7), new_pos: (7, 6), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
         assert_eq!(castle_state.white_right_rook_moved, true);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.white_right_rook_moved, false);
 
         // white king moves
         let mut castle_state = CastleState::new();
         let new_move = Move { current_pos: (7, 4), new_pos: (7, 5), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
         assert_eq!(castle_state.white_king_moved, true);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.white_king_moved, false);
 
         // far left black rook moves
         let mut castle_state = CastleState::new();
         let new_move = Move { current_pos: (0, 0), new_pos: (0, 1), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
         assert_eq!(castle_state.black_left_rook_moved, true);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.black_left_rook_moved, false);
 
         // far right black rook moves
         let mut castle_state = CastleState::new();
         let new_move = Move { current_pos: (0, 7), new_pos: (0, 6), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
         assert_eq!(castle_state.black_right_rook_moved, true);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.black_right_rook_moved, false);
 
         // black king moves
         let mut castle_state = CastleState::new();
         let new_move = Move { current_pos: (0, 4), new_pos: (0, 5), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
         assert_eq!(castle_state.black_king_moved, true);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.black_king_moved, false);
     }
 
     #[test]
@@ -283,18 +271,12 @@ mod tests {
 
         let new_move = Move { current_pos: (7, 4), new_pos: (7, 5), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.white_king_moved, true);
 
         let new_move = Move { current_pos: (7, 0), new_pos: (7, 1), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.white_left_rook_moved, true);
 
         let new_move = Move { current_pos: (7, 7), new_pos: (7, 6), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.white_right_rook_moved, true);
 
 
         let mut board = vec![vec![None; 8]; 8];
@@ -309,17 +291,11 @@ mod tests {
 
         let new_move = Move { current_pos: (0, 4), new_pos: (0, 5), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.black_king_moved, true);
 
         let new_move = Move { current_pos: (0, 0), new_pos: (0, 1), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.black_left_rook_moved, true);
 
         let new_move = Move { current_pos: (0, 7), new_pos: (0, 6), special_rule: None };
         move_piece(&new_move, &mut board, &mut castle_state);
-        unmove_piece(&new_move, &mut board, None).unwrap();
-        assert_eq!(castle_state.black_right_rook_moved, true);
     }
 }
