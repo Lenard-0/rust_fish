@@ -1,12 +1,16 @@
 use std::{cmp::max, f64::INFINITY};
+use end_game::force_king_to_corner_endgame_eval;
 use move_thread::EngineCalculation;
 use ordering::order_moves;
-use scoring::evaluate_board;
 use crate::{chess_functionality::moves::{check::{all_possible_moves, king_is_checked}, king::CastleState, move_piece::{move_piece, unmove_piece}, Move}, Piece};
+use crate::engine::search_captures::search_captures;
 
 pub mod move_thread;
 pub mod scoring;
 pub mod ordering;
+pub mod search_captures;
+pub mod end_game;
+pub mod piece_map;
 
 pub fn search_for_moves(
     depth: usize,
@@ -18,11 +22,7 @@ pub fn search_for_moves(
     mut castle_state: &mut CastleState,
 ) -> Result<EngineCalculation, String> {
     if depth == 0 {
-        return Ok(EngineCalculation {
-            score: evaluate_board(&board, whites_turn)?,
-            best_move: None,
-            // move_sequence: vec![], // No move sequence at depth 0
-        });
+        return search_captures(alpha, beta, board, whites_turn, previous_move, &mut castle_state);
     }
 
     let moves = all_possible_moves(&mut board, whites_turn, previous_move, &mut castle_state, false, true)?;
@@ -59,7 +59,7 @@ pub fn search_for_moves(
             &Some(m.clone()),
             &mut castle_state
         )?;
-        let evaluation = -result.score; // Negate to switch perspective
+        let evaluation = -result.score - force_king_to_corner_endgame_eval(board, !whites_turn)?; // Negate to switch perspective
         unmove_piece(&m, &mut board, taken_piece)?;
         if evaluation >= beta {
             return Ok(EngineCalculation { // prune
@@ -82,3 +82,5 @@ pub fn search_for_moves(
         // move_sequence: best_sequence, // Return the best sequence of moves
     })
 }
+
+
