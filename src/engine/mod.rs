@@ -49,7 +49,7 @@ pub fn search_for_moves(
 
     let ordered_moves = order_moves(moves, board, whites_turn)?;
     for m in ordered_moves {
-        let piece_type_moving = match board[m.current_pos.1][m.current_pos.0].clone() {
+        let piece_type_moving = match board[m.current_pos.0][m.current_pos.1].clone() {
             Some(Piece::Black(piece_type)) | Some(Piece::White(piece_type)) => piece_type,
             None => return Err("No piece found on the square".to_string())
         };
