@@ -21,7 +21,7 @@ pub fn order_moves(
         // Prioritise capturing opponent's most valuable pieces with our least valuable pieces
         let mut move_score_guess = match capture_piece_type {
             // would result in mate so should be prioritised
-            Some(PieceType::King) => 1000,
+            Some(PieceType::King) => 10000,
             // capturing a high value piece by a low value piece maximised likely to end well
             Some(capture_piece_type) => 10 * capture_piece_type.get_value() - move_piece_type.get_value(),
             None => 0,

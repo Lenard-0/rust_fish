@@ -74,7 +74,7 @@ pub fn search_for_moves(
                 best_move: Some(m),
                 score: beta,
                 // move_sequence: vec![]
-            });
+            })
         }
         if evaluation > best_evaluation {
             best_move = m.clone();

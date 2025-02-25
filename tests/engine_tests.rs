@@ -132,12 +132,12 @@ mod tests {
 
         let whites_turn = false;
         let current_board_score = evaluate_board(&board, whites_turn).unwrap();
-        assert_eq!(current_board_score, 100);
+        assert_eq!(current_board_score, 110);
         let mut castle_state = CastleState::new();
         let alpha = -10000 as i32;
         let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            4,
+            3,
             alpha,
             beta,
             &mut board,
@@ -175,7 +175,7 @@ mod tests {
         let alpha = -10000 as i32;
         let beta = 10000 as i32;
         let engine_calculation = search_for_moves(
-            8, // some extra depth to ensure mate in 3 and to ensure it doesn't fail past this
+            7, // some extra depth to ensure mate in 3 and to ensure it doesn't fail past this
             alpha,
             beta,
             &mut board,

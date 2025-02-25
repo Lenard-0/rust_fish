@@ -41,7 +41,7 @@ pub fn search_captures(
 
     for m in ordered_possible_captures {
         let taken_piece = move_piece(&m, &mut board, &mut castle_state.clone());
-        evaluation = -1 * evaluate_board(&board, whites_turn)?;
+        evaluation = evaluate_board(&board, whites_turn)?;
         unmove_piece(&m, &mut board, taken_piece)?;
 
         if evaluation >= beta {
